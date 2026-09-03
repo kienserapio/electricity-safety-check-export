@@ -25,8 +25,8 @@ import {
   addYears,
   todayDateOnly,
 } from './dates.js'
-import { createSafetyCheck, isConfigured } from './db.js'
-import { el, qs, render } from './dom.js'
+import { createSafetyCheck, isConfigured, isDurable } from './db.js'
+import { el, qs, render, storageBanner } from './dom.js'
 import { createSignaturePad } from './signature.js'
 import { validateSafetyCheck } from './validate.js'
 
@@ -502,6 +502,10 @@ function build() {
     certificationSection(),
     el('div', { style: 'display:flex;justify-content:flex-end' }, submitButton),
   ])
+
+  if (!isDurable) {
+    qs('main').prepend(storageBanner())
+  }
 
   if (!isConfigured()) {
     fail('Open js/config.js and fill in your Supabase project URL and anon key before issuing certificates.')

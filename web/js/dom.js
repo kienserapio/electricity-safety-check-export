@@ -47,6 +47,22 @@ export function notice(message, action) {
   return el('div', { class: 'notice' }, [el('p', {}, message), action])
 }
 
+/**
+ * The "this is not a record yet" banner.
+ *
+ * Shown on every page while certificates are kept in the browser. A demo that
+ * looks exactly like the real thing is the one way this app could mislead
+ * someone, so it says so plainly rather than quietly.
+ */
+export function storageBanner(extra) {
+  return el('div', { class: 'banner no-print' }, [
+    el('strong', {}, 'Browser storage.'),
+    ' Certificates are saved in this browser only — not shared with anyone, not ' +
+    'backed up, and erased if site data is cleared.',
+    extra,
+  ])
+}
+
 /** A full-width error panel. Used when Supabase is unreachable or misconfigured. */
 export function errorPanel(message) {
   return el('div', { class: 'alert', role: 'alert' }, [

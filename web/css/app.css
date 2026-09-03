@@ -493,6 +493,25 @@ tbody tr:last-child {
   font-size: 0.875rem;
 }
 
+/* Shown whenever certificates are being kept in the browser rather than in a
+   shared database, so nobody mistakes a demo for a record. */
+.banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--amber) 30%, transparent);
+  border-radius: var(--radius);
+  background: var(--amber-soft);
+  padding: 0.625rem 0.875rem;
+  font-size: 0.8125rem;
+  color: var(--amber);
+}
+
+.banner strong {
+  font-weight: 600;
+}
+
 /* ---------- Signature ---------- */
 
 .signature-pad {

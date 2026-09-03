@@ -5,8 +5,8 @@
 import { CHECKLIST, ITEM_STATE_LABELS, TEST_RESULT_LABELS } from './catalog.js'
 import { ORGANISATION_NAME } from './config.js'
 import { formatDisplayDate } from './dates.js'
-import { getSafetyCheck, isConfigured } from './db.js'
-import { el, errorPanel, notice, param, qs, render } from './dom.js'
+import { getSafetyCheck, isConfigured, isDurable } from './db.js'
+import { el, errorPanel, notice, param, qs, render, storageBanner } from './dom.js'
 import { downloadCertificate } from './pdf.js'
 import { certificateReference } from './reference.js'
 
@@ -14,6 +14,10 @@ const root = qs('#certificate')
 qs('[data-organisation]').textContent = ORGANISATION_NAME
 
 const id = param('id')
+
+if (!isDurable) {
+  qs('main').prepend(storageBanner())
+}
 
 if (!isConfigured()) {
   render(root, errorPanel('Open js/config.js and fill in your Supabase project URL and anon key.'))

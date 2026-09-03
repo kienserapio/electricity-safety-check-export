@@ -7,8 +7,8 @@
 
 import { ORGANISATION_NAME } from './config.js'
 import { formatDisplayDate, parseDateOnly, todayDateOnly } from './dates.js'
-import { getSafetyCheck, isConfigured, listSafetyChecks } from './db.js'
-import { el, errorPanel, notice, param, qs, render } from './dom.js'
+import { getSafetyCheck, isConfigured, isDurable, listSafetyChecks } from './db.js'
+import { el, errorPanel, notice, param, qs, render, storageBanner } from './dom.js'
 import { downloadCertificate } from './pdf.js'
 import { certificateReference } from './reference.js'
 
@@ -18,6 +18,10 @@ qs('[data-organisation]').textContent = ORGANISATION_NAME
 
 const search = param('q') || ''
 qs('input[name="q"]').value = search
+
+if (!isDurable) {
+  qs('main').prepend(storageBanner())
+}
 
 if (!isConfigured()) {
   render(
@@ -38,11 +42,39 @@ async function load() {
 }
 
 function emptyState() {
+  const actions = el('div', {
+    style: 'display:flex;gap:.5rem;justify-content:center;margin-top:1rem;flex-wrap:wrap',
+  }, [
+    el('a', { class: 'btn btn--primary', href: 'new.html' }, 'Start a safety check'),
+    // Filling the form takes a few minutes, which makes it awkward to show
+    // anyone the register. Seeding is offered only for browser storage.
+    !search && !isDurable ? sampleButton() : null,
+  ])
+
   return notice(
     search ? `No certificates match “${search}”.` : 'No certificates have been issued yet.',
-    el('a', { class: 'btn btn--primary', href: 'new.html', style: 'margin-top:1rem' },
-      'Start a safety check'),
+    actions,
   )
+}
+
+function sampleButton() {
+  const button = el('button', { class: 'btn', type: 'button' }, 'Add sample certificates')
+
+  button.addEventListener('click', async () => {
+    button.disabled = true
+    button.textContent = 'Adding…'
+    try {
+      const { addSampleCertificate } = await import('./sample.js')
+      for (let i = 0; i < 4; i++) await addSampleCertificate(i)
+      await load()
+    } catch (error) {
+      console.error(error)
+      button.textContent = 'Failed'
+      button.disabled = false
+    }
+  })
+
+  return button
 }
 
 function table(checks) {
