@@ -28,18 +28,44 @@ just keeps the data in one browser. Every page shows an amber banner saying so,
 because a demo that looks like the real thing is the one way this app could
 mislead someone.
 
+## Sending it to someone
+
+To hand the whole app to a client as **one file**:
+
+```bash
+node build-standalone.js        # or: npm run build:standalone
+# -> dist/electrical-safety-check.html
+```
+
+That is a single ~110 KB HTML file with the CSS and all fourteen modules
+inlined and the three pages turned into three hash routes. It has no imports,
+so it opens by double-clicking — no web server, no unzipping, nothing to
+install. Email it, or drop it in Drive.
+
+Two things to know about it:
+
+- **It needs a connection** for the PDF button, because `pdf-lib` still loads
+  from a CDN.
+- **Opened from disk it may not save.** Browsers restrict IndexedDB on
+  `file://` paths, so the store drops to localStorage, and to memory if that is
+  refused too. The banner says which happened. Served over http it uses
+  IndexedDB normally.
+
+Re-run the command after any change to `web/` — the single file is a build
+output, not a second copy to edit.
+
 ## Running it now, with no database
 
 Upload this folder's contents to `public_html` and open `index.html`. That is
 the whole deployment — local mode needs nothing else.
 
 To try it on your own machine first, serve the folder rather than
-double-clicking the file. The pages use ES modules, which browsers refuse to
-load from a `file://` path:
+double-clicking the file. These pages use ES modules, which browsers refuse to
+load from a `file://` path — the single-file build above is the one that opens
+from disk:
 
 ```bash
-cd web
-python3 -m http.server 8000     # then open http://localhost:8000
+python3 -m http.server 8000 --directory web    # or: npm run serve:web
 ```
 
 Then:
@@ -81,13 +107,16 @@ browser-stored ones as throwaway.
 | `js/validate.js` | Every validation rule |
 | `js/pdf.js` | Certificate PDF, drawn in the browser |
 | `js/db.js` | Picks a storage backend; the pages talk only to this |
-| `js/store-local.js` | IndexedDB backend — no setup, browser-only |
+| `js/store-local.js` | Browser backend — IndexedDB, then localStorage, then memory |
 | `js/store-supabase.js` | Postgres backend — loaded only when selected |
 | `js/sample.js` | Builds sample certificates for the empty register |
 | `js/dates.js` `js/reference.js` | Date handling, certificate references |
 | `js/form.js` `js/register.js` `js/detail.js` | One controller per page |
 | `js/signature.js` `js/dom.js` | Signature capture, DOM helpers |
 | `sql/schema.sql` | Database schema — run once in Supabase, do not upload |
+
+Outside this folder: `build-standalone.js` bundles it all into one file, and
+`tests/` holds the test suite. Neither is uploaded.
 
 ## How the pieces fit together
 
@@ -137,13 +166,17 @@ defaults track the inspection date until the electrician edits one by hand.
 
 ## Tests
 
-Validation, date handling and certificate references are covered by
-`tests/validate.test.js` in the parent folder. Node is used to run them; it is
-not needed to host or to build.
+Validation, date handling, certificate references and the local store's
+fallback tiers are covered by `tests/` in the parent folder. Node runs them; it
+is not needed to host the app.
 
 ```bash
-node --test tests/validate.test.js
+node --test "tests/*.test.js"      # or: npm run test:web
 ```
+
+35 tests. `tests/store-local.test.js` gets the fallback path for free, because
+Node has no IndexedDB either — the same condition a page opened from a
+`file://` path hits.
 
 ## Where the rules are enforced
 

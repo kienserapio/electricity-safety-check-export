@@ -7,28 +7,52 @@
 
 import { ORGANISATION_NAME } from './config.js'
 import { formatDisplayDate, parseDateOnly, todayDateOnly } from './dates.js'
-import { getSafetyCheck, isConfigured, isDurable, listSafetyChecks } from './db.js'
-import { el, errorPanel, notice, param, qs, render, storageBanner } from './dom.js'
+import { getSafetyCheck, isConfigured, isDurable, listSafetyChecks, storageFallback } from './db.js'
+import { el, errorPanel, ensureStorageBanner, notice, pageHref, param, qs, render } from './dom.js'
 import { downloadCertificate } from './pdf.js'
 import { certificateReference } from './reference.js'
 
-const results = qs('#results')
+let results = null
+let search = ''
+let banner = null
+let wired = false
 
-qs('[data-organisation]').textContent = ORGANISATION_NAME
+/**
+ * Renders the register into the markup already on the page.
+ *
+ * Called once per page load in the multi-page build, and again on every hash
+ * change in the single-file one, so anything that attaches a listener has to be
+ * guarded.
+ */
+export function init() {
+  results = qs('#results')
+  search = param('q') || ''
 
-const search = param('q') || ''
-qs('input[name="q"]').value = search
+  qs('[data-organisation]').textContent = ORGANISATION_NAME
+  qs('input[name="q"]').value = search
 
-if (!isDurable) {
-  qs('main').prepend(storageBanner())
-}
+  if (!wired) {
+    wired = true
+    // The single-file build has no second page to GET, so searching moves the
+    // hash and lets the router re-enter here.
+    qs('#register-search').addEventListener('submit', (event) => {
+      event.preventDefault()
+      window.location.href = pageHref('register', { q: qs('input[name="q"]').value })
+    })
+  }
 
-if (!isConfigured()) {
-  render(
-    results,
-    errorPanel('Open js/config.js and fill in your Supabase project URL and anon key.'),
-  )
-} else {
+  if (!isDurable) {
+    banner = ensureStorageBanner()
+  }
+
+  if (!isConfigured()) {
+    render(
+      results,
+      errorPanel('Open js/config.js and fill in your Supabase project URL and anon key.'),
+    )
+    return
+  }
+
   load()
 }
 
@@ -36,6 +60,7 @@ async function load() {
   try {
     const checks = await listSafetyChecks(search)
     render(results, checks.length === 0 ? emptyState() : table(checks))
+    if (storageFallback.active && banner) banner.noteFallback(storageFallback.reason, storageFallback.persists)
   } catch (error) {
     render(results, errorPanel(error.message))
   }
@@ -45,7 +70,7 @@ function emptyState() {
   const actions = el('div', {
     style: 'display:flex;gap:.5rem;justify-content:center;margin-top:1rem;flex-wrap:wrap',
   }, [
-    el('a', { class: 'btn btn--primary', href: 'new.html' }, 'Start a safety check'),
+    el('a', { class: 'btn btn--primary', href: pageHref('new') }, 'Start a safety check'),
     // Filling the form takes a few minutes, which makes it awkward to show
     // anyone the register. Seeding is offered only for browser storage.
     !search && !isDurable ? sampleButton() : null,
@@ -94,7 +119,7 @@ function table(checks) {
     const reference = certificateReference(check.serial, check.inspectionDate)
 
     return el('tr', {}, [
-      el('td', {}, el('a', { href: `check.html?id=${encodeURIComponent(check.id)}` }, reference)),
+      el('td', {}, el('a', { href: pageHref('check', { id: check.id }) }, reference)),
       el('td', {}, check.address),
       el('td', { class: 'muted' }, check.electricianName),
       el('td', { class: 'muted numeric' }, formatDisplayDate(check.inspectionDate)),

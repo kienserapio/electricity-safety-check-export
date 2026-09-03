@@ -13,7 +13,10 @@
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "build:standalone": "node build-standalone.js",
+    "test:web": "node --test \"tests/*.test.js\"",
+    "serve:web": "python3 -m http.server 8000 --directory web"
   },
   "dependencies": {
     "@hookform/resolvers": "5.9.1",

@@ -25,47 +25,69 @@ import {
   addYears,
   todayDateOnly,
 } from './dates.js'
-import { createSafetyCheck, isConfigured, isDurable } from './db.js'
-import { el, qs, render, storageBanner } from './dom.js'
+import { createSafetyCheck, isConfigured, isDurable, storageFallback } from './db.js'
+import { el, ensureStorageBanner, pageHref, qs, render } from './dom.js'
 import { createSignaturePad } from './signature.js'
 import { validateSafetyCheck } from './validate.js'
 
-const form = qs('#safety-check')
-qs('[data-organisation]').textContent = ORGANISATION_NAME
-
-const today = todayDateOnly()
+let form = null
 
 /** Every checklist line starts unanswered, so each one takes a deliberate choice. */
-const state = {
-  address: '',
-  previousCheckDate: '',
-  checklist: Object.fromEntries(CHECKLIST.map((s) => [s.section, {}])),
-  rcdTests: DEFAULT_RCD_CIRCUITS.map((circuit) => ({
-    circuit,
-    pushButtonTest: 'PASS',
-    timeTest: 'PASS',
-  })),
-  smokeAlarmsCompliant: true,
-  smokeAlarmDueDate: addYears(today, SMOKE_ALARM_INTERVAL_YEARS),
-  observations: '',
-  electricianName: '',
-  licenceNumber: '',
-  inspectionDate: today,
-  nextInspectionDue: addYears(today, ELECTRICAL_CHECK_INTERVAL_YEARS),
-  signatureImage: '',
-  signedDate: today,
+function blankState() {
+  const today = todayDateOnly()
+
+  return {
+    address: '',
+    previousCheckDate: '',
+    checklist: Object.fromEntries(CHECKLIST.map((s) => [s.section, {}])),
+    rcdTests: DEFAULT_RCD_CIRCUITS.map((circuit) => ({
+      circuit,
+      pushButtonTest: 'PASS',
+      timeTest: 'PASS',
+    })),
+    smokeAlarmsCompliant: true,
+    smokeAlarmDueDate: addYears(today, SMOKE_ALARM_INTERVAL_YEARS),
+    observations: '',
+    electricianName: '',
+    licenceNumber: '',
+    inspectionDate: today,
+    nextInspectionDue: addYears(today, ELECTRICAL_CHECK_INTERVAL_YEARS),
+    signatureImage: '',
+    signedDate: today,
+  }
 }
 
+let state = blankState()
+
 /** Fields the electrician has edited by hand, which the date defaults stop tracking. */
-const dirty = new Set()
+let dirty = new Set()
 
 /** Dotted path -> the elements that display that field's error. */
-const errorSlots = new Map()
+let errorSlots = new Map()
 
 let alertBox = null
 let submitButton = null
+let banner = null
+let submitWired = false
 
-build()
+/**
+ * Builds a blank form into the markup already on the page.
+ *
+ * The single-file build can re-enter this view after a certificate has been
+ * issued, so the state is rebuilt from scratch rather than carried over — an
+ * electrician starting a second check must not inherit the first one's answers.
+ */
+export function init() {
+  form = qs('#safety-check')
+  qs('[data-organisation]').textContent = ORGANISATION_NAME
+
+  state = blankState()
+  dirty = new Set()
+  errorSlots = new Map()
+  banner = null
+
+  build()
+}
 
 // ---------------------------------------------------------------------------
 // Field primitives
@@ -504,7 +526,8 @@ function build() {
   ])
 
   if (!isDurable) {
-    qs('main').prepend(storageBanner())
+    banner = ensureStorageBanner()
+    if (storageFallback.active) banner.noteFallback(storageFallback.reason, storageFallback.persists)
   }
 
   if (!isConfigured()) {
@@ -512,7 +535,12 @@ function build() {
     submitButton.disabled = true
   }
 
-  form.addEventListener('submit', onSubmit)
+  // The single-file build re-enters init() on every hash change, but the form
+  // element itself persists, so the handler is attached only once.
+  if (!submitWired) {
+    submitWired = true
+    form.addEventListener('submit', onSubmit)
+  }
 }
 
 function fail(message, detail) {
@@ -542,7 +570,7 @@ async function onSubmit(event) {
 
   try {
     const id = await createSafetyCheck(result.values)
-    window.location.href = `check.html?id=${encodeURIComponent(id)}`
+    window.location.href = pageHref('check', { id })
   } catch (error) {
     // The legacy page redirected to "Form Submitted Successfully" whether or not
     // the insert worked, so a failed write looked identical to a saved one.

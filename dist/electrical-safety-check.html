@@ -1,0 +1,3894 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Electrical Safety Check</title>
+<meta name="description" content="Issue and archive Electrical Safety Check reports under the Residential Tenancies Regulations 2021.">
+<style>
+/* Electrical Safety Check — hand-written stylesheet.
+   Replaces the Tailwind build, so there is nothing to compile. Palette matches
+   the certificate PDF so screen and print agree. */
+
+:root {
+  --ink: #1c2430;
+  --muted: #5b6675;
+  --line: #d5dbe3;
+  --accent: #365f91;
+  --accent-soft: #eef2f8;
+  --pass: #1a7f4b;
+  --fail: #b3261e;
+  --amber: #b45309;
+  --amber-soft: #fffbeb;
+  --page: #f2f4f7;
+  --radius: 8px;
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--page);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, p, ul, figure {
+  margin: 0;
+}
+
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: var(--accent);
+}
+
+/* ---------- Layout ---------- */
+
+.site-header {
+  border-bottom: 1px solid var(--line);
+  background: #fff;
+}
+
+.site-header__inner,
+.wrap {
+  margin: 0 auto;
+  max-width: 64rem;
+  padding: 0 1.5rem;
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 1rem;
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+  text-decoration: none;
+}
+
+.brand__name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.brand__sub {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+main.wrap {
+  padding-block: 2rem;
+}
+
+.stack > * + * {
+  margin-top: 1.5rem;
+}
+
+/* ---------- Cards and sections ---------- */
+
+.card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #fff;
+  padding: 1.25rem;
+  box-shadow: 0 1px 2px rgb(16 24 40 / 6%);
+}
+
+.card--pad {
+  padding: 1.5rem;
+}
+
+.section-heading {
+  margin-bottom: 0.75rem;
+}
+
+.section-heading__title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.section-heading__intro {
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.section-heading__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0.5rem;
+}
+
+/* ---------- Forms ---------- */
+
+.grid {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 40rem) {
+  .grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .span-2 { grid-column: span 2; }
+}
+
+.field__label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.field__hint {
+  margin-top: 0.25rem;
+  font-size: 0.6875rem;
+  color: var(--muted);
+}
+
+.field__error {
+  margin-top: 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--fail);
+}
+
+.required {
+  color: var(--fail);
+  margin-left: 0.125rem;
+}
+
+input[type='text'],
+input[type='date'],
+select,
+textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  padding: 0.5rem 0.75rem;
+  font: inherit;
+  font-size: 0.875rem;
+  color: inherit;
+  outline: none;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgb(54 95 145 / 18%);
+}
+
+input[aria-invalid='true'],
+textarea[aria-invalid='true'] {
+  border-color: var(--fail);
+}
+
+textarea {
+  resize: vertical;
+}
+
+fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+legend {
+  padding: 0;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.radio-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.radio-row label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.radio-row input {
+  accent-color: var(--accent);
+  width: 1rem;
+  height: 1rem;
+}
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  display: inline-block;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  padding: 0.5rem 1rem;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s ease, opacity 0.15s ease;
+}
+
+.btn:hover {
+  background: var(--accent-soft);
+}
+
+.btn--primary {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn--primary:hover {
+  background: var(--accent);
+  opacity: 0.9;
+}
+
+.btn--small {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+}
+
+.btn--submit {
+  padding: 0.625rem 2rem;
+  font-weight: 600;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* ---------- Checklist ---------- */
+
+.checklist {
+  display: grid;
+  gap: 0.375rem;
+}
+
+@media (min-width: 40rem) {
+  .checklist { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+.checklist__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-radius: 6px;
+  padding: 0.375rem 0.5rem;
+}
+
+.checklist__row:hover {
+  background: color-mix(in srgb, var(--accent-soft) 60%, transparent);
+}
+
+.checklist__label {
+  font-size: 0.875rem;
+}
+
+.checklist__row[data-state='NOT_APPLICABLE'] .checklist__label {
+  color: var(--muted);
+  text-decoration: line-through;
+}
+
+.states {
+  display: flex;
+  flex-shrink: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.states button {
+  border: 0;
+  border-left: 1px solid var(--line);
+  background: #fff;
+  padding: 0.25rem 0.5rem;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.states button:first-child {
+  border-left: 0;
+}
+
+.states button:hover {
+  background: var(--accent-soft);
+}
+
+.states button[aria-checked='true'] {
+  color: #fff;
+}
+
+.states button[aria-checked='true'][data-state='INCLUDED'] {
+  background: var(--pass);
+}
+
+.states button[aria-checked='true'][data-state='NOT_APPLICABLE'] {
+  background: #64748b;
+}
+
+.states button[aria-checked='true'][data-state='NOT_INCLUDED'] {
+  background: #f59e0b;
+}
+
+.tally {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.tally[data-complete='true'] {
+  color: var(--pass);
+}
+
+/* ---------- Tables ---------- */
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+thead tr {
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+th {
+  padding: 0.5rem 0.75rem 0.5rem 0;
+  font-weight: 600;
+}
+
+td {
+  padding: 0.5rem 0.75rem 0.5rem 0;
+  vertical-align: top;
+}
+
+tbody tr {
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+}
+
+tbody tr:last-child {
+  border-bottom: 0;
+}
+
+.register-table {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 1px 2px rgb(16 24 40 / 6%);
+}
+
+.register-table thead tr {
+  background: var(--accent-soft);
+}
+
+.register-table th,
+.register-table td {
+  padding: 0.75rem 1rem;
+}
+
+.register-table td.numeric {
+  white-space: nowrap;
+}
+
+.rcd-table th:nth-child(2),
+.rcd-table th:nth-child(3) {
+  width: 10rem;
+}
+
+.rcd-table th:last-child {
+  width: 2.5rem;
+}
+
+/* ---------- Status ---------- */
+
+.muted { color: var(--muted); }
+.overdue { color: var(--fail); font-weight: 600; }
+
+.badge {
+  display: inline-block;
+  flex-shrink: 0;
+  border-radius: 4px;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.badge[data-state='INCLUDED'] {
+  background: color-mix(in srgb, var(--pass) 12%, #fff);
+  color: var(--pass);
+}
+
+.badge[data-state='NOT_APPLICABLE'] {
+  background: #f1f5f9;
+  color: var(--muted);
+}
+
+.badge[data-state='NOT_INCLUDED'] {
+  background: var(--amber-soft);
+  color: var(--amber);
+}
+
+.alert {
+  border: 1px solid color-mix(in srgb, var(--fail) 30%, transparent);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--fail) 5%, #fff);
+  padding: 1rem;
+  font-size: 0.875rem;
+  color: var(--fail);
+}
+
+.alert__title {
+  font-weight: 600;
+}
+
+.alert__detail {
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+}
+
+.notice {
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  background: #fff;
+  padding: 3rem;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+/* Shown whenever certificates are being kept in the browser rather than in a
+   shared database, so nobody mistakes a demo for a record. */
+.banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--amber) 30%, transparent);
+  border-radius: var(--radius);
+  background: var(--amber-soft);
+  padding: 0.625rem 0.875rem;
+  font-size: 0.8125rem;
+  color: var(--amber);
+}
+
+.banner strong {
+  font-weight: 600;
+}
+
+/* ---------- Signature ---------- */
+
+.signature-pad {
+  height: 9rem;
+  width: 100%;
+  touch-action: none;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  cursor: crosshair;
+}
+
+.signature-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+/* ---------- Certificate header ---------- */
+
+.certificate-header {
+  text-align: center;
+}
+
+.certificate-header__regulation {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.certificate-header__title {
+  margin-top: 0.25rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.certificate-header__preamble {
+  margin-top: 1rem;
+  text-align: left;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.page-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.toolbar form {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.toolbar input {
+  width: 18rem;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.summary-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 40rem) {
+  .summary-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+.summary-grid dt {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.summary-grid dd {
+  margin: 0.125rem 0 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.detail-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  padding: 0.125rem 0;
+}
+
+.detail-list li[data-state='NOT_APPLICABLE'] span:first-child {
+  color: var(--muted);
+  text-decoration: line-through;
+}
+
+.prewrap {
+  white-space: pre-wrap;
+}
+
+/* The register and certificate pages are routinely printed. Strip the chrome
+   and let the body run edge to edge when they are. */
+@media print {
+  body { background: #fff; }
+  .no-print { display: none !important; }
+  .card { box-shadow: none; border-color: #ccc; break-inside: avoid; }
+}
+
+</style>
+</head>
+<body>
+
+<header class="site-header no-print">
+  <div class="site-header__inner">
+    <a class="brand" href="#/">
+      <span class="brand__name" data-organisation>Electrical Safety Check</span>
+      <span class="brand__sub">Electrical Safety Check register</span>
+    </a>
+    <a class="btn btn--primary" href="#/new">New safety check</a>
+  </div>
+</header>
+
+<main class="wrap stack">
+
+  <div id="view-register" class="stack" hidden>
+    <div class="toolbar">
+      <div>
+        <h1 class="page-title">Safety check register</h1>
+        <p class="muted">Every certificate issued, newest inspection first.</p>
+      </div>
+      <form class="no-print" id="register-search">
+        <input type="text" name="q" aria-label="Search the register"
+               placeholder="Search address, electrician or licence">
+        <button class="btn" type="submit">Search</button>
+      </form>
+    </div>
+    <div id="results">
+      <p class="muted">Loading the register…</p>
+    </div>
+  </div>
+
+  <div id="view-new" hidden>
+    <form id="safety-check" class="stack" novalidate>
+      <p class="muted">Loading the form…</p>
+    </form>
+  </div>
+
+  <div id="view-check" class="stack" hidden>
+    <div id="certificate" class="stack">
+      <p class="muted">Loading the certificate…</p>
+    </div>
+  </div>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script>
+
+'use strict';
+window.__ESC_SINGLE_FILE__ = true;
+
+(function () {
+  var __factories = {};
+  var __cache = {};
+
+  function __def(name, factory) { __factories[name] = factory }
+
+  function __req(name) {
+    if (__cache[name]) return __cache[name];
+    var factory = __factories[name];
+    if (!factory) throw new Error('Module not bundled: ' + name);
+    // Seeded before running so a cycle sees a partially filled object rather
+    // than recursing forever. This graph has none, but a future edit might.
+    __cache[name] = {};
+    var exports = factory(__req);
+    Object.assign(__cache[name], exports);
+    return __cache[name];
+  }
+
+__def('config.js', function (__req) {
+/**
+ * The only file you need to edit.
+ *
+ * Out of the box this runs entirely in the browser with no database, so you can
+ * open the pages and use them immediately. Switch STORAGE to 'supabase' once a
+ * real project exists.
+ */
+
+/**
+ * 'local'    — IndexedDB in the visitor's own browser. No account, no setup.
+ *              Certificates live in that one browser only: they are not shared
+ *              between people or devices, and clearing site data erases them.
+ *              Fine for demonstrating and for trying the form. Not a record.
+ *
+ * 'supabase' — Postgres, shared by everyone who opens the site. Run
+ *              sql/schema.sql in the Supabase SQL editor, then fill in the two
+ *              values below.
+ */
+const STORAGE = 'local'
+
+/**
+ * Only read when STORAGE is 'supabase'. Both are safe to publish: the anon key
+ * is designed to sit in a public page, and row level security in sql/schema.sql
+ * is what decides who can read and write. Never paste the service_role key
+ * here — that one bypasses every policy.
+ *
+ * Supabase → Project Settings → API.
+ */
+const SUPABASE_URL = 'https://YOUR-PROJECT.supabase.co'
+const SUPABASE_ANON_KEY = 'YOUR-ANON-KEY'
+
+/** Printed on the certificate and in the page header. */
+const ORGANISATION_NAME = 'Colney & Co'
+
+  return {
+    STORAGE,
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY,
+    ORGANISATION_NAME,
+  }
+})
+
+__def('dates.js', function (__req) {
+/**
+ * Date helpers for the report.
+ *
+ * Every date on this form is a calendar date, never an instant, so they travel
+ * as `YYYY-MM-DD` strings and are stored in Postgres `date` columns. Parsing
+ * goes through UTC midnight so a user in Melbourne and a database in UTC agree
+ * on which day a certificate was signed.
+ */
+
+const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/
+
+/** Parses `YYYY-MM-DD` to a UTC-midnight Date, or null if it is not a real date. */
+function parseDateOnly(value) {
+  if (typeof value !== 'string' || !DATE_PATTERN.test(value)) return null
+  const [year, month, day] = value.split('-').map(Number)
+  const date = new Date(Date.UTC(year, month - 1, day))
+  const roundTripped =
+    date.getUTCFullYear() === year &&
+    date.getUTCMonth() === month - 1 &&
+    date.getUTCDate() === day
+  return roundTripped ? date : null
+}
+
+/** Formats a Date back to `YYYY-MM-DD` for date inputs. */
+function toDateOnly(date) {
+  return date.toISOString().slice(0, 10)
+}
+
+/** Today as `YYYY-MM-DD` in the viewer's local calendar. */
+function todayDateOnly() {
+  const now = new Date()
+  const local = new Date(now.getTime() - now.getTimezoneOffset() * 60_000)
+  return local.toISOString().slice(0, 10)
+}
+
+function addYears(value, years) {
+  const date = parseDateOnly(value)
+  if (!date) return ''
+  date.setUTCFullYear(date.getUTCFullYear() + years)
+  return toDateOnly(date)
+}
+
+/** Human-readable form used throughout the PDF and the register, e.g. 11 Feb 2026. */
+function formatDisplayDate(date) {
+  if (!date) return '—'
+  const parsed = typeof date === 'string' ? parseDateOnly(date) : date
+  if (!parsed) return '—'
+  return new Intl.DateTimeFormat('en-AU', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    timeZone: 'UTC',
+  }).format(parsed)
+}
+
+/**
+ * The Residential Tenancies Regulations 2021 require an electrical safety check
+ * every two years, and smoke alarms to be tested every twelve months.
+ */
+const ELECTRICAL_CHECK_INTERVAL_YEARS = 2
+const SMOKE_ALARM_INTERVAL_YEARS = 1
+
+  return {
+    DATE_PATTERN,
+    parseDateOnly,
+    toDateOnly,
+    todayDateOnly,
+    addYears,
+    formatDisplayDate,
+    ELECTRICAL_CHECK_INTERVAL_YEARS,
+    SMOKE_ALARM_INTERVAL_YEARS,
+  }
+})
+
+__def('catalog.js', function (__req) {
+/**
+ * The statutory checklist content, defined once and consumed by the form, the
+ * validation rules and the PDF renderer.
+ *
+ * The legacy PHP page repeated these labels in three places — the form inputs,
+ * the values posted to the database and the export template — which let them
+ * drift apart. Anything that needs a label now reads it from here.
+ */
+
+const CHECKLIST_SECTIONS = [
+  'EXTENT',
+  'VISUAL_INSPECTION',
+  'POLARITY',
+  'EARTH_CONTINUITY',
+]
+
+const ITEM_STATES = ['INCLUDED', 'NOT_APPLICABLE', 'NOT_INCLUDED']
+
+const ITEM_STATE_LABELS = {
+  INCLUDED: 'Checked',
+  NOT_APPLICABLE: 'N/A',
+  NOT_INCLUDED: 'NI',
+}
+
+const ITEM_STATE_DESCRIPTIONS = {
+  INCLUDED: 'Included in the safety check',
+  NOT_APPLICABLE: 'Not applicable to this installation',
+  NOT_INCLUDED: 'Not included in the safety check',
+}
+
+const TEST_RESULTS = ['PASS', 'FAIL', 'NA']
+
+const TEST_RESULT_LABELS = {
+  PASS: 'Pass',
+  FAIL: 'Fail',
+  NA: 'N/A',
+}
+
+const item = (key, label) => ({ key, label })
+
+const CHECKLIST = [
+  {
+    section: 'EXTENT',
+    letter: 'B',
+    title: 'Extent of the installation and limitations of the inspection and testing',
+    intro:
+      'Details of those parts of the installation and limitations of the safety check covered by this certificate. ' +
+      'Mark each part as checked, not applicable, or not included in the safety check.',
+    items: [
+      item('main_switchboard', 'Main switchboard'),
+      item('main_earthing_system', 'Main earthing system'),
+      item('kitchen', 'Kitchen'),
+      item('bathroom_main', 'Bathroom (main)'),
+      item('bathrooms_other', 'Other bathrooms/ensuites'),
+      item('bedroom_main', 'Bedroom (main)'),
+      item('bedrooms_other', 'Other bedrooms'),
+      item('living_room', 'Living room'),
+      item('living_areas_other', 'Other living areas'),
+      item('laundry', 'Laundry'),
+      item('garage', 'Garage'),
+      item('solar_battery_system', 'Solar/battery system'),
+      item('electric_water_heater', 'Electric water heater'),
+      item('dishwasher', 'Dishwasher'),
+      item('space_heaters', 'Electric room/space heaters'),
+      item('swimming_pool_equipment', 'Swimming pool equipment'),
+    ],
+  },
+  {
+    section: 'VISUAL_INSPECTION',
+    letter: 'C',
+    title: 'Safety check – visual inspection',
+    intro:
+      'As far as practicable a VISUAL INSPECTION of the following items has been carried out per the requirements of ' +
+      'section 3 and 4 of AS/NZS 3019:2007 Electrical installations — Periodic verification.',
+    items: [
+      item('consumers_mains', 'Consumers mains'),
+      item('switchboards', 'Switchboards'),
+      item('exposed_earth_electrode', 'Exposed earth electrode'),
+      item('metallic_water_pipe_bond', 'Metallic water pipe bond'),
+      item('rcds', 'RCDs (safety switches)'),
+      item('circuit_protection', 'Circuit protection (circuit breakers / fuses)'),
+      item('socket_outlets', 'Socket-outlets'),
+      item('light_fittings', 'Light fittings'),
+      item('electric_water_heater', 'Electric water heater'),
+      item('air_conditioners', 'Air conditioners'),
+      item('space_heaters', 'Space heaters'),
+      item('cooking_equipment', 'Cooking equipment'),
+      item('dishwasher', 'Dishwasher'),
+      item('exhaust_fans', 'Exhaust fans'),
+      item('ceiling_fans', 'Ceiling fans'),
+      item('washing_machine_dryer', 'Washing machine/dryer'),
+      item('installation_wiring', 'Installation wiring'),
+      item('renewable_systems', 'Solar and other renewable systems'),
+      item('swimming_pool_equipment', 'Swimming pool equipment'),
+      item('vehicle_chargers', 'Vehicle chargers'),
+    ],
+  },
+  {
+    section: 'POLARITY',
+    letter: 'D',
+    title: 'Safety check – verified by testing',
+    subtitle: 'Polarity and correct connections testing',
+    intro:
+      'As far as practicable TESTING of the following items has been carried out per the requirements of section 4 of ' +
+      'AS/NZS 3019:2007 Electrical installations — Periodic verification.',
+    items: [
+      item('consumers_mains', 'Consumers mains'),
+      item('circuit_protection', 'Circuit protection (circuit breakers / fuses)'),
+      item('rcds', 'RCDs (safety switches)'),
+      item('socket_outlets', 'Socket-outlets'),
+      item('light_fittings', 'Light fittings'),
+      item('electric_water_heater', 'Electric water heater'),
+      item('air_conditioners', 'Air conditioners'),
+      item('cooking_equipment', 'Cooking equipment'),
+      item('dishwasher', 'Dishwasher'),
+      item('renewable_systems', 'Solar and other renewable systems'),
+      item('swimming_pool_equipment', 'Swimming pool equipment'),
+      item('vehicle_chargers', 'Vehicle chargers'),
+    ],
+  },
+  {
+    section: 'EARTH_CONTINUITY',
+    letter: 'D',
+    title: 'Safety check – verified by testing',
+    subtitle: 'Earth continuity testing',
+    intro: '',
+    items: [
+      item('mains_earth_conductor', 'Mains earth conductor'),
+      item('switchboard_enclosure', 'Switchboard enclosure'),
+      item('metallic_water_pipe_bond', 'Metallic water pipe bond'),
+      item('socket_outlets', 'Socket-outlets'),
+      item('light_fittings', 'Light fittings'),
+      item('exhaust_fans', 'Exhaust fans'),
+      item('ceiling_fans', 'Ceiling fans'),
+      item('electric_water_heater', 'Electric water heater'),
+      item('air_conditioners', 'Air conditioners'),
+      item('cooking_equipment', 'Cooking equipment'),
+      item('dishwasher', 'Dishwasher'),
+      item('renewable_systems', 'Solar and other renewable systems'),
+      item('swimming_pool_equipment', 'Swimming pool equipment'),
+      item('vehicle_chargers', 'Vehicle chargers'),
+    ],
+  },
+]
+
+const CHECKLIST_BY_SECTION = new Map(CHECKLIST.map((s) => [s.section, s]))
+
+/** Circuits pre-populated in the RCD table. The electrician can add or remove rows. */
+const DEFAULT_RCD_CIRCUITS = [
+  'Power outlets',
+  'Power outlets',
+  'Power outlets',
+  'Lighting',
+  'Lighting',
+  'Other',
+]
+
+/**
+ * Resolves an item key back to its printed label. Returns the key itself if the
+ * catalogue no longer contains it, so historical records still render.
+ */
+function itemLabel(section, key) {
+  const definition = CHECKLIST_BY_SECTION.get(section)
+  const found = definition?.items.find((i) => i.key === key)
+  return found ? found.label : key
+}
+
+const REGULATION_PREAMBLE =
+  'This electrical safety check is for electrical safety purposes only and is in accordance with the requirements of ' +
+  'the Residential Tenancies Regulations 2021 and is prepared in accordance with section 2 of the Australian/New Zealand ' +
+  'Standard AS/NZS 3019, Electrical installations — Periodic verification, to confirm that the installation is not damaged ' +
+  'or has not deteriorated so as to impair electrical safety, and to identify installation defects and departures from the ' +
+  'requirements that may give rise to danger.'
+
+const CERTIFICATION_DECLARATION =
+  'I, the above named licenced electrician, have carried out an electrical safety check of this residential tenancy per the ' +
+  'requirements of the Residential Tenancies Regulations 2021 and as set out in the Australian/New Zealand Standard ' +
+  'AS/NZS 3019, Electrical installations — Periodic verification, and have recorded my observations and recommendations.'
+
+const SMOKE_ALARM_NOTE =
+  "All smoke alarms must be tested according to the manufacturer's instructions at least once every 12 months."
+
+  return {
+    CHECKLIST_SECTIONS,
+    ITEM_STATES,
+    ITEM_STATE_LABELS,
+    ITEM_STATE_DESCRIPTIONS,
+    TEST_RESULTS,
+    TEST_RESULT_LABELS,
+    CHECKLIST,
+    CHECKLIST_BY_SECTION,
+    DEFAULT_RCD_CIRCUITS,
+    itemLabel,
+    REGULATION_PREAMBLE,
+    CERTIFICATION_DECLARATION,
+    SMOKE_ALARM_NOTE,
+  }
+})
+
+__def('reference.js', function (__req) {
+/**
+ * Human-readable certificate reference, e.g. ESC-2026-000042.
+ *
+ * Derived from the record's serial and the year of inspection so it is stable,
+ * sortable and unique without a second write after insert.
+ */
+function certificateReference(serial, inspectionDate) {
+  const year = inspectionDate.getUTCFullYear()
+  return `ESC-${year}-${String(serial).padStart(6, '0')}`
+}
+
+/** Filename for the exported PDF. Safe on every platform, and self-describing. */
+function certificateFilename(reference, address) {
+  const slug = address
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 60)
+  return slug ? `${reference}-${slug}.pdf` : `${reference}.pdf`
+}
+
+  return {
+    certificateReference,
+    certificateFilename,
+  }
+})
+
+__def('validate.js', function (__req) {
+/**
+ * The single validation pass for a safety check.
+ *
+ * This is the vanilla-JS port of the Zod schema the Next.js version used. It is
+ * deliberately kept free of DOM references so the same file can run inside a
+ * Supabase Edge Function, where it becomes the copy a caller cannot skip.
+ *
+ * `validateSafetyCheck(payload)` returns either
+ *   { ok: true,  values }                       — trimmed and normalised, or
+ *   { ok: false, fieldErrors, formError }       — dotted path -> first message.
+ *
+ * Dotted paths match the field names used in the form markup, e.g.
+ * `address`, `rcdTests.0.circuit`, `checklist.EXTENT.kitchen`.
+ */
+
+const { CHECKLIST, CHECKLIST_SECTIONS, ITEM_STATES, TEST_RESULTS } = __req('catalog.js')
+const { DATE_PATTERN, parseDateOnly, todayDateOnly } = __req('dates.js')
+const MAX_SIGNATURE_BYTES = 400_000
+const MAX_RCD_ROWS = 60
+
+/** Collects issues, keeping only the first message per path, as Zod did. */
+class Issues {
+  constructor() {
+    this.fieldErrors = {}
+  }
+
+  add(path, message) {
+    if (path && !(path in this.fieldErrors)) this.fieldErrors[path] = message
+  }
+
+  get count() {
+    return Object.keys(this.fieldErrors).length
+  }
+}
+
+function asString(value) {
+  return typeof value === 'string' ? value : ''
+}
+
+/** Shared shape of every date field: right format, and a day that exists. */
+function checkDate(issues, path, value, { optional = false } = {}) {
+  const raw = asString(value)
+  if (optional && raw === '') return null
+  if (!DATE_PATTERN.test(raw)) {
+    issues.add(path, 'Use the date picker (YYYY-MM-DD).')
+    return null
+  }
+  const parsed = parseDateOnly(raw)
+  if (!parsed) {
+    issues.add(path, 'That date does not exist.')
+    return null
+  }
+  return parsed
+}
+
+function checkText(issues, path, value, { min, max, minMessage, maxMessage }) {
+  const trimmed = asString(value).trim()
+  if (min !== undefined && trimmed.length < min) {
+    issues.add(path, minMessage)
+    return trimmed
+  }
+  if (max !== undefined && trimmed.length > max) {
+    issues.add(path, maxMessage)
+  }
+  return trimmed
+}
+
+function validateSafetyCheck(payload) {
+  const issues = new Issues()
+  const input = payload && typeof payload === 'object' ? payload : {}
+
+  // A. Installation address
+  const address = checkText(issues, 'address', input.address, {
+    min: 1,
+    max: 500,
+    minMessage: 'Enter the address of the installation.',
+    maxMessage: 'Keep the address under 500 characters.',
+  })
+
+  const previousCheckDateRaw = asString(input.previousCheckDate)
+  const previous = checkDate(issues, 'previousCheckDate', previousCheckDateRaw, { optional: true })
+
+  // B, C and D checklists — every catalogue line must resolve to one of the
+  // three states. The statutory form asks the electrician to tick, strike out,
+  // or mark NI; leaving a line blank is not one of the options.
+  const checklist = {}
+  for (const section of CHECKLIST_SECTIONS) {
+    checklist[section] = {}
+    const definition = CHECKLIST.find((s) => s.section === section)
+    const answers = (input.checklist && input.checklist[section]) || {}
+    for (const item of definition.items) {
+      const state = answers[item.key]
+      if (!ITEM_STATES.includes(state)) {
+        issues.add(`checklist.${section}.${item.key}`, 'Answer every line in this section.')
+        continue
+      }
+      checklist[section][item.key] = state
+    }
+  }
+
+  // D. RCD testing
+  const rcdInput = Array.isArray(input.rcdTests) ? input.rcdTests : []
+  if (rcdInput.length < 1) {
+    issues.add('rcdTests', 'Record at least one RCD test.')
+  } else if (rcdInput.length > MAX_RCD_ROWS) {
+    issues.add('rcdTests', 'Sixty RCD rows is the practical limit for one report.')
+  }
+
+  const rcdTests = rcdInput.map((row, index) => {
+    const source = row && typeof row === 'object' ? row : {}
+    const circuit = checkText(issues, `rcdTests.${index}.circuit`, source.circuit, {
+      min: 1,
+      max: 200,
+      minMessage: 'Name the circuit this RCD protects.',
+      maxMessage: 'Keep the circuit name under 200 characters.',
+    })
+    for (const field of ['pushButtonTest', 'timeTest']) {
+      if (!TEST_RESULTS.includes(source[field])) {
+        issues.add(`rcdTests.${index}.${field}`, 'Choose a test result.')
+      }
+    }
+    return {
+      circuit,
+      pushButtonTest: source.pushButtonTest,
+      timeTest: source.timeTest,
+    }
+  })
+
+  // E. Smoke alarms
+  const smokeAlarmsCompliant = input.smokeAlarmsCompliant
+  if (typeof smokeAlarmsCompliant !== 'boolean') {
+    issues.add('smokeAlarmsCompliant', 'Record whether the smoke alarms are compliant.')
+  }
+  const smokeDue = checkDate(issues, 'smokeAlarmDueDate', input.smokeAlarmDueDate)
+
+  // F. Observations and recommendations
+  const observations = asString(input.observations)
+  if (observations.length > 5000) {
+    issues.add('observations', 'Keep observations under 5000 characters.')
+  }
+
+  // G. Certification
+  const electricianName = checkText(issues, 'electricianName', input.electricianName, {
+    min: 1,
+    max: 200,
+    minMessage: 'Enter the name of the electrician who completed the check.',
+    maxMessage: 'Keep the name under 200 characters.',
+  })
+  const licenceNumber = checkText(issues, 'licenceNumber', input.licenceNumber, {
+    min: 1,
+    max: 100,
+    minMessage: 'Enter your licence or registration number.',
+    maxMessage: 'Keep the licence number under 100 characters.',
+  })
+
+  const inspection = checkDate(issues, 'inspectionDate', input.inspectionDate)
+  const nextDue = checkDate(issues, 'nextInspectionDue', input.nextInspectionDue)
+  const signed = checkDate(issues, 'signedDate', input.signedDate)
+
+  const signatureImage = asString(input.signatureImage)
+  if (signatureImage.length === 0) {
+    issues.add('signatureImage', 'Sign the certificate before submitting.')
+  } else if (!signatureImage.startsWith('data:image/png;base64,')) {
+    issues.add('signatureImage', 'The signature could not be read. Clear it and sign again.')
+  } else if (signatureImage.length > MAX_SIGNATURE_BYTES) {
+    issues.add('signatureImage', 'The signature image is too large. Clear it and sign again.')
+  }
+
+  // Cross-field rules. These run on whatever parsed cleanly above, so a bad
+  // date reports its own problem rather than a confusing ordering error.
+  const today = parseDateOnly(todayDateOnly())
+
+  if (inspection && today && inspection.getTime() > today.getTime()) {
+    issues.add('inspectionDate', 'The inspection date cannot be in the future.')
+  }
+
+  if (inspection && previous && previous.getTime() >= inspection.getTime()) {
+    issues.add('previousCheckDate', 'The previous check must be earlier than this inspection.')
+  }
+
+  if (inspection && nextDue && nextDue.getTime() <= inspection.getTime()) {
+    issues.add('nextInspectionDue', 'The next inspection must fall after this one.')
+  }
+
+  if (inspection && smokeDue && smokeDue.getTime() <= inspection.getTime()) {
+    issues.add('smokeAlarmDueDate', 'The smoke alarm check is due after this inspection, not before it.')
+  }
+
+  if (inspection && smokeDue) {
+    const twelveMonths = new Date(inspection)
+    twelveMonths.setUTCFullYear(twelveMonths.getUTCFullYear() + 1)
+    if (smokeDue.getTime() > twelveMonths.getTime()) {
+      issues.add('smokeAlarmDueDate', 'Smoke alarms must be tested at least every 12 months.')
+    }
+  }
+
+  if (inspection && signed && signed.getTime() < inspection.getTime()) {
+    issues.add('signedDate', 'The certificate cannot be signed before the inspection took place.')
+  }
+
+  // A failed RCD or a non-compliant smoke alarm is exactly the situation the
+  // observations box exists for, so require it rather than letting a report go
+  // out recording a failure and nothing else.
+  const hasFailure = rcdTests.some(
+    (test) => test.pushButtonTest === 'FAIL' || test.timeTest === 'FAIL',
+  )
+  if (hasFailure && observations.trim().length === 0) {
+    issues.add('observations', 'An RCD failed. Record what was found and what action is recommended.')
+  }
+  if (smokeAlarmsCompliant === false && observations.trim().length === 0) {
+    issues.add('observations', 'Smoke alarms are not compliant. Record what was found and what is recommended.')
+  }
+
+  if (issues.count > 0) {
+    return {
+      ok: false,
+      fieldErrors: issues.fieldErrors,
+      formError: 'Some answers need attention before this certificate can be issued.',
+    }
+  }
+
+  return {
+    ok: true,
+    values: {
+      address,
+      previousCheckDate: previousCheckDateRaw || null,
+      checklist,
+      rcdTests,
+      smokeAlarmsCompliant,
+      smokeAlarmDueDate: asString(input.smokeAlarmDueDate),
+      observations,
+      electricianName,
+      licenceNumber,
+      inspectionDate: asString(input.inspectionDate),
+      nextInspectionDue: asString(input.nextInspectionDue),
+      signatureImage,
+      signedDate: asString(input.signedDate),
+    },
+  }
+}
+
+  return {
+    validateSafetyCheck,
+  }
+})
+
+__def('dom.js', function (__req) {
+/**
+ * Small DOM helpers.
+ *
+ * Everything user-entered — addresses, electrician names, observations — is set
+ * as text nodes rather than assembled into HTML strings, so a stray angle
+ * bracket in an address is just an angle bracket.
+ */
+
+/** el('div', { class: 'card' }, ['text', childNode]) */
+function el(tag, attrs = {}, children = []) {
+  const node = document.createElement(tag)
+
+  for (const [key, value] of Object.entries(attrs)) {
+    if (value == null || value === false) continue
+    if (key === 'class') node.className = value
+    else if (key === 'dataset') Object.assign(node.dataset, value)
+    else if (key.startsWith('on') && typeof value === 'function') {
+      node.addEventListener(key.slice(2).toLowerCase(), value)
+    } else if (key === 'value') node.value = value
+    else if (value === true) node.setAttribute(key, '')
+    else node.setAttribute(key, String(value))
+  }
+
+  for (const child of [].concat(children)) {
+    if (child == null || child === false) continue
+    node.append(typeof child === 'string' || typeof child === 'number' ? String(child) : child)
+  }
+
+  return node
+}
+
+function qs(selector, scope = document) {
+  return scope.querySelector(selector)
+}
+
+/** Replaces everything inside `parent`. */
+function render(parent, ...children) {
+  parent.replaceChildren(...children.flat().filter((c) => c != null && c !== false))
+}
+
+/**
+ * True when running as the single-file build, which the bundler signals by
+ * defining this flag before the app code.
+ *
+ * The three pages become three hash routes in one document, because a file
+ * emailed to someone has to be one file. Everything else is identical.
+ */
+const SINGLE_FILE =
+  typeof window !== 'undefined' && window.__ESC_SINGLE_FILE__ === true
+
+/** Splits `#/check/<id>` or `#/?q=term` into a path and its parameters. */
+function route() {
+  const raw = window.location.hash.replace(/^#\/?/, '')
+  const [path = '', query = ''] = raw.split('?')
+  return { path, params: new URLSearchParams(query) }
+}
+
+/**
+ * Reads a parameter from wherever this build keeps it — the query string for
+ * the multi-page build, the hash for the single-file one.
+ */
+function param(name) {
+  if (!SINGLE_FILE) return new URLSearchParams(window.location.search).get(name)
+
+  const { path, params } = route()
+  if (name === 'id') {
+    const [section, id] = path.split('/')
+    return section === 'check' && id ? decodeURIComponent(id) : null
+  }
+  return params.get(name)
+}
+
+/**
+ * A link to one of the three views, in whichever form this build uses.
+ *
+ * `page` is 'register', 'new' or 'check'.
+ */
+function pageHref(page, { id, q } = {}) {
+  if (SINGLE_FILE) {
+    if (page === 'new') return '#/new'
+    if (page === 'check') return `#/check/${encodeURIComponent(id)}`
+    return q ? `#/?q=${encodeURIComponent(q)}` : '#/'
+  }
+
+  if (page === 'new') return 'new.html'
+  if (page === 'check') return `check.html?id=${encodeURIComponent(id)}`
+  return q ? `index.html?q=${encodeURIComponent(q)}` : 'index.html'
+}
+
+function notice(message, action) {
+  return el('div', { class: 'notice' }, [el('p', {}, message), action])
+}
+
+/**
+ * The "this is not a record yet" banner.
+ *
+ * Shown on every page while certificates are kept in the browser. A demo that
+ * looks exactly like the real thing is the one way this app could mislead
+ * someone, so it says so plainly rather than quietly.
+ */
+function storageBanner() {
+  const warning = el('span', { hidden: true })
+
+  const node = el('div', { class: 'banner no-print' }, [
+    el('strong', {}, 'Browser storage.'),
+    ' Certificates are saved in this browser only — not shared with anyone, not ' +
+    'backed up, and erased if site data is cleared.',
+    warning,
+  ])
+
+  /**
+   * Called once the store finds it cannot reach IndexedDB, which happens on a
+   * page opened straight off the disk. Says which tier it landed on, because
+   * "saved somewhere smaller" and "not saved at all" are very different things
+   * to be told after issuing a certificate.
+   */
+  node.noteFallback = (reason, persists) => {
+    warning.hidden = false
+    warning.replaceChildren(
+      persists
+        ? el('strong', {}, ' Using simple storage.')
+        : el('strong', {}, ' Nothing is being saved.'),
+      persists
+        ? ` ${reason} Certificates are still kept, but only a handful fit. ` +
+          'Opening the page through a web address rather than from a file lifts that.'
+        : ` ${reason} Certificates will disappear when this tab closes. Open the ` +
+          'page through a web address rather than from a file to keep them.',
+    )
+  }
+
+  return node
+}
+
+/**
+ * Puts exactly one storage banner at the top of `main`, and returns it.
+ *
+ * The single-file build keeps one `main` across all three views, so each view
+ * asking for a banner would otherwise stack them up.
+ */
+function ensureStorageBanner() {
+  const main = qs('main')
+  const existing = main.querySelector('.banner')
+  if (existing) return existing
+
+  const node = storageBanner()
+  main.prepend(node)
+  return node
+}
+
+/** A full-width error panel. Used when Supabase is unreachable or misconfigured. */
+function errorPanel(message) {
+  return el('div', { class: 'alert', role: 'alert' }, [
+    el('p', { class: 'alert__title' }, 'Something went wrong'),
+    el('p', { class: 'alert__detail' }, message),
+  ])
+}
+
+  return {
+    el,
+    qs,
+    render,
+    SINGLE_FILE,
+    route,
+    param,
+    pageHref,
+    notice,
+    storageBanner,
+    ensureStorageBanner,
+    errorPanel,
+  }
+})
+
+__def('store-local.js', function (__req) {
+/**
+ * Browser-local storage, for running the app with no database behind it.
+ *
+ * Three tiers, in order of preference:
+ *
+ *   IndexedDB      the normal case. No practical size limit.
+ *   localStorage   when IndexedDB is refused, which is common for a page
+ *                  opened straight off the disk as `file://`. Holds a few
+ *                  certificates, not thousands: a signature PNG is a few
+ *                  hundred kilobytes against a ~5 MB ceiling.
+ *   memory         when both are refused. Dies with the tab.
+ *
+ * Certificates written here live in one browser on one machine. Nothing is
+ * shared, backed up, or visible to anyone else — see `isDurable` below, which
+ * the pages use to say so on screen.
+ */
+
+const { parseDateOnly } = __req('dates.js')
+const DB_NAME = 'electrical-safety-check'
+const DB_VERSION = 1
+const STORE = 'certificates'
+const META = 'meta'
+
+const isDurable = false
+const label = 'browser storage'
+
+/**
+ * Set once the first write or read discovers IndexedDB is unusable.
+ *
+ * A page opened straight off the disk as `file://` has an opaque origin, and
+ * browsers variously restrict or refuse IndexedDB there. Private windows and
+ * "block all site data" settings do the same. Rather than showing a broken app,
+ * the store drops a tier and the banner reports which one it landed on —
+ * `persists` is false only when even localStorage was refused.
+ */
+const fallback = { active: false, reason: '', persists: false }
+
+/**
+ * Second choice when IndexedDB is unreachable: localStorage, and plain memory
+ * if even that is refused.
+ *
+ * localStorage holds a few certificates rather than thousands — a signature PNG
+ * is a few hundred kilobytes against a ~5 MB ceiling — which is why it is not
+ * the primary store. As a fallback it is worth having, because it means a file
+ * opened straight off the disk still remembers what was issued.
+ */
+const shelf = (() => {
+  const KEY = 'electrical-safety-check.certificates'
+  const memory = []
+  let usable = false
+
+  try {
+    localStorage.setItem(`${KEY}.probe`, '1')
+    localStorage.removeItem(`${KEY}.probe`)
+    usable = true
+  } catch {
+    usable = false
+  }
+
+  const toMemory = (rows) => {
+    memory.length = 0
+    memory.push(...rows)
+  }
+
+  return {
+    get persists() {
+      return usable
+    },
+    read() {
+      if (!usable) return memory
+      try {
+        return JSON.parse(localStorage.getItem(KEY) || '[]')
+      } catch {
+        return []
+      }
+    },
+    write(rows) {
+      if (!usable) return toMemory(rows)
+      try {
+        localStorage.setItem(KEY, JSON.stringify(rows))
+      } catch {
+        // Out of quota, most likely. Drop to memory rather than losing the
+        // write that is in flight.
+        usable = false
+        fallback.persists = false
+        fallback.reason = 'This browser ran out of local storage space.'
+        toMemory(rows)
+      }
+    },
+  }
+})()
+
+let connection = null
+
+function open() {
+  if (connection) return connection
+
+  connection = new Promise((resolve, reject) => {
+    let request
+    try {
+      request = indexedDB.open(DB_NAME, DB_VERSION)
+    } catch (error) {
+      // Firefox throws outright on a file:// origin rather than failing async.
+      reject(new Error(error.message || 'IndexedDB is not available on this page.'))
+      return
+    }
+
+    request.onupgradeneeded = () => {
+      const db = request.result
+      if (!db.objectStoreNames.contains(STORE)) {
+        db.createObjectStore(STORE, { keyPath: 'id' })
+      }
+      if (!db.objectStoreNames.contains(META)) {
+        db.createObjectStore(META)
+      }
+    }
+
+    request.onsuccess = () => resolve(request.result)
+    request.onerror = () =>
+      reject(new Error('This browser refused access to local storage.'))
+    request.onblocked = () =>
+      reject(new Error('Another tab is holding an older version of the database.'))
+  })
+
+  return connection
+}
+
+/**
+ * Resolves to a database, or null once the fallback has taken over.
+ *
+ * The first failure is recorded and never retried, so a page opened from disk
+ * does not attempt a doomed connection on every keystroke.
+ */
+async function tryOpen() {
+  if (fallback.active) return null
+
+  if (typeof indexedDB === 'undefined') {
+    return dropTier('This browser has no IndexedDB.')
+  }
+
+  try {
+    return await open()
+  } catch (error) {
+    return dropTier(error.message)
+  }
+}
+
+/**
+ * Records why IndexedDB is out and which tier took over.
+ *
+ * Both callers must go through here: setting `active` without `persists` once
+ * made a browser that had no IndexedDB but a perfectly good localStorage claim
+ * it was saving nothing.
+ */
+function dropTier(reason) {
+  fallback.active = true
+  fallback.reason = reason
+  fallback.persists = shelf.persists
+  return null
+}
+
+/** Wraps an IndexedDB request in a promise. */
+function wrap(request) {
+  return new Promise((resolve, reject) => {
+    request.onsuccess = () => resolve(request.result)
+    request.onerror = () => reject(request.error || new Error('Local storage request failed.'))
+  })
+}
+
+/** Always true — there is nothing to configure. */
+function isConfigured() {
+  return true
+}
+
+/**
+ * Writes a certificate and returns its id.
+ *
+ * The serial is allocated inside the same transaction as the insert, so two
+ * certificates issued in quick succession cannot collide on a reference.
+ */
+async function createSafetyCheck(values) {
+  const db = await tryOpen()
+
+  if (!db) {
+    const rows = shelf.read()
+    const serial = rows.reduce((max, row) => Math.max(max, row.serial || 0), 0) + 1
+    const id = crypto.randomUUID()
+    rows.push({ ...values, id, serial, createdAt: new Date().toISOString() })
+    shelf.write(rows)
+    return id
+  }
+
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction([STORE, META], 'readwrite')
+    const meta = tx.objectStore(META)
+    const store = tx.objectStore(STORE)
+    let id
+
+    const read = meta.get('serial')
+    read.onsuccess = () => {
+      const serial = (read.result || 0) + 1
+      meta.put(serial, 'serial')
+
+      id = crypto.randomUUID()
+      store.put({
+        ...values,
+        id,
+        serial,
+        createdAt: new Date().toISOString(),
+      })
+    }
+
+    tx.oncomplete = () => resolve(id)
+    tx.onerror = () =>
+      reject(new Error(tx.error?.message || 'The certificate could not be written to this browser.'))
+    tx.onabort = () =>
+      reject(new Error(tx.error?.message || 'The write was aborted before anything was stored.'))
+  })
+}
+
+/** Register rows, newest inspection first. `search` matches address, name or licence. */
+async function listSafetyChecks(search) {
+  const db = await tryOpen()
+  const rows = db
+    ? await wrap(db.transaction(STORE, 'readonly').objectStore(STORE).getAll())
+    : shelf.read()
+
+  const term = (search || '').trim().toLowerCase()
+  const matches = term
+    ? rows.filter((row) =>
+        [row.address, row.electricianName, row.licenceNumber]
+          .some((value) => String(value || '').toLowerCase().includes(term)),
+      )
+    : rows
+
+  return matches
+    .sort((a, b) => b.inspectionDate.localeCompare(a.inspectionDate))
+    .slice(0, 100)
+    .map(toSummary)
+}
+
+/** Everything the certificate page and the PDF need. */
+async function getSafetyCheck(id) {
+  const db = await tryOpen()
+  const row = db
+    ? await wrap(db.transaction(STORE, 'readonly').objectStore(STORE).get(id))
+    : shelf.read().find((candidate) => candidate.id === id)
+  return row ? toRecord(row) : null
+}
+
+/** Used by the register's sample-data affordance. */
+async function count() {
+  const db = await tryOpen()
+  if (!db) return shelf.read().length
+  return wrap(db.transaction(STORE, 'readonly').objectStore(STORE).count())
+}
+
+function toSummary(row) {
+  return {
+    id: row.id,
+    serial: row.serial,
+    address: row.address,
+    electricianName: row.electricianName,
+    inspectionDate: parseDateOnly(row.inspectionDate),
+    nextInspectionDue: parseDateOnly(row.nextInspectionDue),
+    smokeAlarmsCompliant: row.smokeAlarmsCompliant,
+  }
+}
+
+/** Dates are stored as YYYY-MM-DD strings, exactly as the Postgres path stores them. */
+function toRecord(row) {
+  return {
+    id: row.id,
+    serial: row.serial,
+    address: row.address,
+    previousCheckDate: row.previousCheckDate ? parseDateOnly(row.previousCheckDate) : null,
+    checklist: row.checklist,
+    rcdTests: row.rcdTests,
+    smokeAlarmsCompliant: row.smokeAlarmsCompliant,
+    smokeAlarmDueDate: parseDateOnly(row.smokeAlarmDueDate),
+    observations: row.observations,
+    electricianName: row.electricianName,
+    licenceNumber: row.licenceNumber,
+    inspectionDate: parseDateOnly(row.inspectionDate),
+    nextInspectionDue: parseDateOnly(row.nextInspectionDue),
+    signatureImage: row.signatureImage,
+    signedDate: parseDateOnly(row.signedDate),
+  }
+}
+
+/** Everything stored here, as a JSON string — the only backup this mode has. */
+async function exportAll() {
+  const db = await tryOpen()
+  const rows = db
+    ? await wrap(db.transaction(STORE, 'readonly').objectStore(STORE).getAll())
+    : shelf.read()
+  return JSON.stringify({ exported: new Date().toISOString(), certificates: rows }, null, 2)
+}
+
+  return {
+    isDurable,
+    label,
+    fallback,
+    isConfigured,
+    createSafetyCheck,
+    listSafetyChecks,
+    getSafetyCheck,
+    count,
+    exportAll,
+  }
+})
+
+__def('db.js', function (__req) {
+/**
+ * Picks the storage backend and hands the pages one interface.
+ *
+ * `STORAGE` in config.js decides. Both backends expose the same three
+ * functions and return the same shapes, so no page knows the difference:
+ *
+ *   store-local.js     IndexedDB in the visitor's browser. No setup.
+ *   store-supabase.js  Postgres. Needs a project and the schema applied.
+ *
+ * The Supabase module is imported only when it is selected, so a local build
+ * never fetches the client library from a CDN.
+ */
+
+const { STORAGE } = __req('config.js')
+const local = __req('store-local.js')
+const backend = STORAGE === 'supabase' ? __req('store-supabase.js') : local
+
+/** Whether writes survive leaving this browser. False for the local backend. */
+const isDurable = backend.isDurable
+
+/** Human-readable name of the backend in use, for the on-screen banner. */
+const storageLabel = backend.label
+
+function isConfigured() {
+  return backend.isConfigured()
+}
+
+function createSafetyCheck(values) {
+  return backend.createSafetyCheck(values)
+}
+
+function listSafetyChecks(search) {
+  return backend.listSafetyChecks(search)
+}
+
+function getSafetyCheck(id) {
+  return backend.getSafetyCheck(id)
+}
+
+/** Only present on the local backend; the register uses it to offer a sample. */
+const exportAll = local.exportAll
+
+/**
+ * Live view of whether the local store had to fall back to memory. Meaningless
+ * for the Supabase backend, where it stays inactive.
+ */
+const storageFallback = local.fallback
+
+  return {
+    isDurable,
+    storageLabel,
+    isConfigured,
+    createSafetyCheck,
+    listSafetyChecks,
+    getSafetyCheck,
+    exportAll,
+    storageFallback,
+  }
+})
+
+__def('pdf.js', function (__req) {
+/**
+ * The certificate PDF, drawn with pdf-lib in the browser.
+ *
+ * pdf-lib has no layout engine — no flexbox, no text wrapping, no page breaks —
+ * so this file provides the small amount of layout the certificate needs: a
+ * cursor that measures down from the top of the page, word wrapping against a
+ * measured font, and an `ensure()` that starts a new page before a block would
+ * run off the bottom.
+ *
+ * Helvetica is one of the fourteen fonts built into the PDF format, so nothing
+ * is fetched or embedded at render time and the file stays small.
+ *
+ * Tick marks are vector paths rather than symbol-font glyphs. The original
+ * TCPDF export used ZapfDingbats characters, which meant the checked state
+ * lived in a font rather than in the page content — it did not survive text
+ * extraction and rendered inconsistently across viewers.
+ */
+
+const { CERTIFICATION_DECLARATION, CHECKLIST, REGULATION_PREAMBLE, SMOKE_ALARM_NOTE, TEST_RESULT_LABELS } = __req('catalog.js')
+const { ORGANISATION_NAME } = __req('config.js')
+const { formatDisplayDate } = __req('dates.js')
+const { certificateFilename, certificateReference } = __req('reference.js')
+const { PDFDocument, StandardFonts, rgb } = window.PDFLib
+
+// A4 in points.
+const PAGE_W = 595.28
+const PAGE_H = 841.89
+
+const MARGIN_X = 42
+const CONTENT_TOP = 64
+const CONTENT_BOTTOM = PAGE_H - 56
+const CONTENT_W = PAGE_W - MARGIN_X * 2
+
+const palette = {
+  ink: hex('#1c2430'),
+  muted: hex('#5b6675'),
+  line: hex('#c9d2dd'),
+  accent: hex('#365f91'),
+  accentSoft: hex('#eef2f8'),
+  pass: hex('#1a7f4b'),
+  fail: hex('#b3261e'),
+  failSoft: hex('#fdf2f1'),
+  white: hex('#ffffff'),
+}
+
+function hex(value) {
+  const n = parseInt(value.slice(1), 16)
+  return rgb(((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255)
+}
+
+/**
+ * A page with a top-down cursor.
+ *
+ * pdf-lib measures from the bottom-left, which is awkward for a document that
+ * flows downward, so `y` here is distance from the top of the page and every
+ * draw call converts on the way out.
+ */
+class Layout {
+  constructor(doc, fonts) {
+    this.doc = doc
+    this.regular = fonts.regular
+    this.bold = fonts.bold
+    this.pages = []
+    this.newPage()
+  }
+
+  newPage() {
+    this.page = this.doc.addPage([PAGE_W, PAGE_H])
+    this.pages.push(this.page)
+    this.y = CONTENT_TOP
+    return this.page
+  }
+
+  /** Starts a new page if `height` more would run past the bottom margin. */
+  ensure(height) {
+    if (this.y + height > CONTENT_BOTTOM) this.newPage()
+  }
+
+  font(bold) {
+    return bold ? this.bold : this.regular
+  }
+
+  /** Splits `text` into lines that fit `maxWidth`, honouring existing newlines. */
+  wrap(text, { size, bold = false, maxWidth }) {
+    const font = this.font(bold)
+    const lines = []
+    for (const paragraph of String(text).split('\n')) {
+      const words = paragraph.split(/\s+/).filter(Boolean)
+      if (words.length === 0) {
+        lines.push('')
+        continue
+      }
+      let current = words[0]
+      for (const word of words.slice(1)) {
+        const candidate = `${current} ${word}`
+        if (font.widthOfTextAtSize(candidate, size) <= maxWidth) {
+          current = candidate
+        } else {
+          lines.push(current)
+          current = word
+        }
+      }
+      lines.push(current)
+    }
+    return lines
+  }
+
+  /** Height a block of text will occupy, without drawing it. */
+  heightOf(text, { size, bold = false, maxWidth, lineHeight = 1.45 }) {
+    return this.wrap(text, { size, bold, maxWidth }).length * size * lineHeight
+  }
+
+  /**
+   * Draws wrapped text at the cursor (or at `top`, leaving the cursor alone) and
+   * returns the height used.
+   */
+  text(text, options) {
+    const {
+      size = 8.5,
+      bold = false,
+      color = palette.ink,
+      maxWidth = CONTENT_W,
+      x = MARGIN_X,
+      top = null,
+      lineHeight = 1.45,
+      align = 'left',
+      advance = true,
+    } = options || {}
+
+    const font = this.font(bold)
+    const lines = this.wrap(text, { size, bold, maxWidth })
+    const step = size * lineHeight
+    // Sits the glyph box in the middle of the line box.
+    const baselineOffset = (step - size) / 2 + size * 0.72
+    let cursor = top === null ? this.y : top
+
+    for (const line of lines) {
+      let drawX = x
+      if (align !== 'left') {
+        const width = font.widthOfTextAtSize(line, size)
+        drawX = align === 'center' ? x + (maxWidth - width) / 2 : x + maxWidth - width
+      }
+      this.page.drawText(line, {
+        x: drawX,
+        y: PAGE_H - cursor - baselineOffset,
+        size,
+        font,
+        color,
+      })
+      cursor += step
+    }
+
+    const used = lines.length * step
+    if (advance && top === null) this.y += used
+    return used
+  }
+
+  rect(x, top, width, height, options = {}) {
+    this.page.drawRectangle({
+      x,
+      y: PAGE_H - top - height,
+      width,
+      height,
+      ...(options.fill ? { color: options.fill } : {}),
+      ...(options.border
+        ? { borderColor: options.border, borderWidth: options.borderWidth ?? 0.75 }
+        : {}),
+    })
+  }
+
+  line(x1, top, x2, options = {}) {
+    this.page.drawLine({
+      start: { x: x1, y: PAGE_H - top },
+      end: { x: x2, y: PAGE_H - top },
+      thickness: options.thickness ?? 0.75,
+      color: options.color ?? palette.line,
+    })
+  }
+
+  /** SVG paths are drawn in a top-down space anchored at (x, top). */
+  svg(path, x, top, options = {}) {
+    this.page.drawSvgPath(path, {
+      x,
+      y: PAGE_H - top,
+      ...(options.fill ? { color: options.fill } : { color: undefined }),
+      ...(options.stroke ? { borderColor: options.stroke } : {}),
+      ...(options.strokeWidth ? { borderWidth: options.strokeWidth } : {}),
+    })
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Marks
+// ---------------------------------------------------------------------------
+
+const BOX = 8
+
+function checkedMark(l, x, top) {
+  l.rect(x + 0.4, top + 0.4, 7.2, 7.2, { fill: palette.pass })
+  l.svg('M2 4.2 L3.4 5.7 L6.1 2.5', x, top, {
+    stroke: palette.white,
+    strokeWidth: 1.2,
+  })
+}
+
+function notApplicableMark(l, x, top) {
+  l.rect(x + 0.4, top + 0.4, 7.2, 7.2, { fill: palette.white, border: palette.line, borderWidth: 0.7 })
+  l.svg('M1.6 6.4 L6.4 1.6', x, top, { stroke: palette.muted, strokeWidth: 0.9 })
+}
+
+function notIncludedMark(l, x, top) {
+  l.rect(x + 0.4, top + 0.4, 7.2, 7.2, { fill: palette.white, border: palette.line, borderWidth: 0.7 })
+}
+
+function stateMark(l, x, top, state) {
+  if (state === 'INCLUDED') checkedMark(l, x, top)
+  else if (state === 'NOT_APPLICABLE') notApplicableMark(l, x, top)
+  else notIncludedMark(l, x, top)
+}
+
+function radioMark(l, x, top, selected) {
+  l.page.drawCircle({
+    x: x + 4,
+    y: PAGE_H - top - 4,
+    size: 3.4,
+    color: palette.white,
+    borderColor: selected ? palette.pass : palette.line,
+    borderWidth: 0.8,
+  })
+  if (selected) {
+    l.svg('M2.2 4.1 L3.5 5.4 L5.9 2.6', x, top, {
+      stroke: palette.pass,
+      strokeWidth: 1.1,
+    })
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Blocks
+// ---------------------------------------------------------------------------
+
+/**
+ * Space a heading must have beneath it before it is allowed to sit on a page.
+ * Without this a heading strands at the foot of one page with its content
+ * overleaf — the case `minPresenceAhead` covered in the react-pdf version.
+ */
+const KEEP_WITH_NEXT = 96
+
+function sectionHeading(l, text) {
+  const height = 17
+  l.ensure(height + 20 + KEEP_WITH_NEXT)
+  l.y += 14
+  l.rect(MARGIN_X, l.y, CONTENT_W, height, { fill: palette.accentSoft })
+  l.rect(MARGIN_X, l.y, 3, height, { fill: palette.accent })
+  l.text(text.toUpperCase(), {
+    size: 9.5,
+    bold: true,
+    color: palette.accent,
+    x: MARGIN_X + 7,
+    maxWidth: CONTENT_W - 14,
+    top: l.y + 3.5,
+  })
+  l.y += height + 6
+}
+
+function subHeading(l, text) {
+  l.ensure(30 + KEEP_WITH_NEXT)
+  l.y += 8
+  l.text(text, { size: 8.5, bold: true })
+  l.y += 4
+}
+
+/** A label above a value with a hairline rule under it, as on the printed form. */
+function labelledValue(l, x, top, width, label, value) {
+  l.text(label.toUpperCase(), {
+    size: 6.5,
+    color: palette.muted,
+    x,
+    maxWidth: width,
+    top,
+  })
+  const valueTop = top + 6.5 * 1.45
+  const height = l.text(value, { size: 9, x, maxWidth: width, top: valueTop })
+  l.line(x, valueTop + height + 3, x + width)
+  return valueTop + height + 3 - top
+}
+
+function fieldRow(l, fields) {
+  const gap = 14
+  const totalFlex = fields.reduce((sum, f) => sum + (f.flex || 1), 0)
+  const usable = CONTENT_W - gap * (fields.length - 1)
+
+  // Measure first so the whole row moves to the next page together.
+  let tallest = 0
+  let x = MARGIN_X
+  const placed = fields.map((field) => {
+    const width = (usable * (field.flex || 1)) / totalFlex
+    const entry = { ...field, x, width }
+    x += width + gap
+    const height = 6.5 * 1.45 + l.heightOf(field.value, { size: 9, maxWidth: width }) + 3
+    tallest = Math.max(tallest, height)
+    return entry
+  })
+
+  l.ensure(tallest + 6)
+  for (const field of placed) {
+    labelledValue(l, field.x, l.y, field.width, field.label, field.value)
+  }
+  l.y += tallest + 6
+}
+
+function legend(l) {
+  const entries = [
+    ['INCLUDED', 'Included in the safety check'],
+    ['NOT_APPLICABLE', 'Not applicable to this installation'],
+    ['NOT_INCLUDED', 'NI — not included in the safety check'],
+  ]
+  l.ensure(14)
+  let x = MARGIN_X
+  for (const [state, label] of entries) {
+    stateMark(l, x, l.y + 1, state)
+    l.text(label, { size: 6.5, color: palette.muted, x: x + BOX + 3, maxWidth: 200, top: l.y + 1 })
+    x += BOX + 3 + l.regular.widthOfTextAtSize(label, 6.5) + 14
+  }
+  l.y += 14
+}
+
+/** One statutory checklist, in two columns like the printed form. */
+function checklistBlock(l, section, states, { showLetter, showLegend }) {
+  const gap = 16
+  const colWidth = (CONTENT_W - gap) / 2
+  const labelWidth = colWidth - BOX - 4
+  const half = Math.ceil(section.items.length / 2)
+  const columns = [section.items.slice(0, half), section.items.slice(half)]
+
+  const rowHeight = (item) =>
+    Math.max(BOX, l.heightOf(item.label, { size: 8, maxWidth: labelWidth })) + 2.5
+
+  const columnHeights = columns.map((column) =>
+    column.reduce((sum, item) => sum + rowHeight(item), 0),
+  )
+  const gridHeight = Math.max(...columnHeights)
+
+  // The heading, its wording and the start of the list are measured together
+  // and moved as one, so a section never opens at the foot of a page with its
+  // items overleaf.
+  const preamble =
+    (showLetter ? 14 + 17 + 6 : 0) +
+    (section.intro ? l.heightOf(section.intro, { size: 7, maxWidth: CONTENT_W }) + 6 : 0) +
+    (section.subtitle ? 8 + 8.5 * 1.45 + 4 : 0) +
+    (showLegend ? 14 : 0)
+
+  // The tallest checklist is 20 items over two columns, so a whole block always
+  // fits on a fresh page and can be moved rather than split.
+  l.ensure(preamble + gridHeight)
+
+  if (showLetter) sectionHeading(l, `${section.letter}. ${section.title}`)
+  if (section.intro) {
+    l.text(section.intro, { size: 7, color: palette.muted })
+    l.y += 6
+  }
+  if (section.subtitle) subHeading(l, section.subtitle)
+  if (showLegend) legend(l)
+
+  const blockTop = l.y
+  columns.forEach((column, index) => {
+    const x = MARGIN_X + index * (colWidth + gap)
+    let top = blockTop
+    for (const item of column) {
+      const state = states[item.key]
+      stateMark(l, x, top + 1.5, state)
+      l.text(item.label, {
+        size: 8,
+        x: x + BOX + 4,
+        maxWidth: labelWidth,
+        top,
+        color: state === 'NOT_APPLICABLE' ? palette.muted : palette.ink,
+      })
+      if (state === 'NOT_APPLICABLE') {
+        // pdf-lib has no text-decoration, so the strike-through is a rule drawn
+        // across the measured width of the label.
+        const width = Math.min(l.regular.widthOfTextAtSize(item.label, 8), labelWidth)
+        l.line(x + BOX + 4, top + 5.8, x + BOX + 4 + width, { thickness: 0.5, color: palette.muted })
+      }
+      if (state === 'NOT_INCLUDED') {
+        const width = l.regular.widthOfTextAtSize(item.label, 8)
+        l.text('NI', {
+          size: 6,
+          bold: true,
+          color: palette.muted,
+          x: Math.min(x + BOX + 4 + width + 4, x + colWidth - 10),
+          maxWidth: 12,
+          top: top + 0.5,
+        })
+      }
+      top += rowHeight(item)
+    }
+  })
+
+  l.y = blockTop + Math.max(...columnHeights)
+}
+
+function rcdTable(l, tests) {
+  subHeading(l, 'RCD (residual current device / safety switch) testing')
+
+  const resultWidth = 110
+  const circuitWidth = CONTENT_W - resultWidth * 2
+  const headerHeight = 15
+
+  l.ensure(headerHeight + 18)
+  const tableTop = l.y
+  l.rect(MARGIN_X, l.y, CONTENT_W, headerHeight, { fill: palette.accentSoft })
+  const headers = [
+    ['Circuit protected', MARGIN_X + 6, circuitWidth],
+    ['Push button test', MARGIN_X + circuitWidth + 6, resultWidth],
+    ['Time test', MARGIN_X + circuitWidth + resultWidth + 6, resultWidth],
+  ]
+  for (const [label, x, width] of headers) {
+    l.text(label.toUpperCase(), {
+      size: 6.5,
+      bold: true,
+      color: palette.muted,
+      x,
+      maxWidth: width - 12,
+      top: l.y + 4,
+    })
+  }
+  l.y += headerHeight
+
+  let sectionTop = tableTop
+  for (const test of tests) {
+    const circuitHeight = l.heightOf(test.circuit, { size: 8, maxWidth: circuitWidth - 12 })
+    const rowHeight = Math.max(circuitHeight, 8 * 1.45) + 8
+
+    if (l.y + rowHeight > CONTENT_BOTTOM) {
+      // Close the border around what has been drawn, then carry on overleaf.
+      l.rect(MARGIN_X, sectionTop, CONTENT_W, l.y - sectionTop, { border: palette.line })
+      l.newPage()
+      sectionTop = l.y
+    }
+
+    l.line(MARGIN_X, l.y, MARGIN_X + CONTENT_W)
+    l.text(test.circuit, {
+      size: 8,
+      x: MARGIN_X + 6,
+      maxWidth: circuitWidth - 12,
+      top: l.y + 4,
+    })
+
+    const results = [
+      [test.pushButtonTest, MARGIN_X + circuitWidth + 6],
+      [test.timeTest, MARGIN_X + circuitWidth + resultWidth + 6],
+    ]
+    for (const [result, x] of results) {
+      l.text(TEST_RESULT_LABELS[result], {
+        size: 8,
+        bold: result !== 'NA',
+        color: result === 'PASS' ? palette.pass : result === 'FAIL' ? palette.fail : palette.muted,
+        x,
+        maxWidth: resultWidth - 12,
+        top: l.y + 4,
+      })
+    }
+    l.y += rowHeight
+  }
+
+  l.rect(MARGIN_X, sectionTop, CONTENT_W, l.y - sectionTop, { border: palette.line })
+}
+
+function failCallout(l, count) {
+  const message = `${count} RCD test${count === 1 ? '' : 's'} failed. See observations and recommendations below.`
+  const height = l.heightOf(message, { size: 7.5, bold: true, maxWidth: CONTENT_W - 14 }) + 14
+  l.ensure(height + 8)
+  l.y += 8
+  l.rect(MARGIN_X, l.y, CONTENT_W, height, { fill: palette.failSoft, border: palette.fail })
+  l.text(message, {
+    size: 7.5,
+    bold: true,
+    color: palette.fail,
+    x: MARGIN_X + 7,
+    maxWidth: CONTENT_W - 14,
+    top: l.y + 7,
+  })
+  l.y += height
+}
+
+function smokeAlarms(l, data) {
+  sectionHeading(l, 'E. Smoke alarms')
+
+  const gap = 14
+  const leftWidth = ((CONTENT_W - gap) * 2) / 3
+  const rightX = MARGIN_X + leftWidth + gap
+  const rightWidth = CONTENT_W - leftWidth - gap
+
+  const statement =
+    'All smoke alarms are correctly installed and in working condition, and have been tested according to the ' +
+    "manufacturer's instructions."
+  const statementHeight = l.heightOf(statement, { size: 8, maxWidth: leftWidth })
+
+  l.ensure(statementHeight + 40)
+  const top = l.y
+
+  l.text(statement, { size: 8, maxWidth: leftWidth, top })
+  const radioTop = top + statementHeight + 4
+  radioMark(l, MARGIN_X, radioTop, data.smokeAlarmsCompliant)
+  l.text('Yes', { size: 8, x: MARGIN_X + BOX + 4, maxWidth: 30, top: radioTop })
+  radioMark(l, MARGIN_X + 50, radioTop, !data.smokeAlarmsCompliant)
+  l.text('No', { size: 8, x: MARGIN_X + 50 + BOX + 4, maxWidth: 30, top: radioTop })
+
+  const usedRight = labelledValue(
+    l,
+    rightX,
+    top,
+    rightWidth,
+    'Next smoke alarm check due by',
+    formatDisplayDate(data.smokeAlarmDueDate),
+  )
+  l.text(SMOKE_ALARM_NOTE, {
+    size: 6.5,
+    color: palette.muted,
+    x: rightX,
+    maxWidth: rightWidth,
+    top: top + usedRight + 4,
+  })
+
+  l.y = top + Math.max(statementHeight + 4 + BOX + 6, usedRight + 20) + 6
+}
+
+function observations(l, text) {
+  sectionHeading(l, 'F. Observations and recommendations for any actions to be taken')
+  const body =
+    text.trim() || 'No observations or recommendations were recorded for this installation.'
+  const height = Math.max(54, l.heightOf(body, { size: 8, maxWidth: CONTENT_W - 16 }) + 16)
+  l.ensure(height)
+  l.rect(MARGIN_X, l.y, CONTENT_W, height, { border: palette.line })
+  l.text(body, { size: 8, x: MARGIN_X + 8, maxWidth: CONTENT_W - 16, top: l.y + 8 })
+  l.y += height
+}
+
+async function certification(l, data, signature) {
+  sectionHeading(l, 'G. Electrical safety check certification')
+
+  fieldRow(l, [
+    { label: 'Safety check completed by', value: data.electricianName },
+    { label: 'Licence / registration number', value: data.licenceNumber },
+  ])
+  fieldRow(l, [
+    { label: 'Inspection date', value: formatDisplayDate(data.inspectionDate) },
+    { label: 'Next inspection due by', value: formatDisplayDate(data.nextInspectionDue) },
+  ])
+
+  l.y += 4
+  const declarationHeight = l.heightOf(CERTIFICATION_DECLARATION, { size: 7.5, maxWidth: CONTENT_W })
+  l.ensure(declarationHeight + 90)
+  l.text(CERTIFICATION_DECLARATION, { size: 7.5, color: palette.muted })
+  l.y += 12
+
+  const signatureHeight = 46
+  const dateWidth = 150
+  const signatureWidth = CONTENT_W - dateWidth - 20
+
+  l.ensure(signatureHeight + 24)
+  const top = l.y
+
+  if (signature) {
+    // Fit inside the box without distortion, anchored left as on the form.
+    const scale = Math.min(signatureWidth / signature.width, signatureHeight / signature.height)
+    l.page.drawImage(signature, {
+      x: MARGIN_X,
+      y: PAGE_H - top - signatureHeight,
+      width: signature.width * scale,
+      height: signature.height * scale,
+    })
+  }
+
+  const ruleTop = top + signatureHeight + 2
+  l.line(MARGIN_X, ruleTop, MARGIN_X + signatureWidth, { color: palette.ink })
+  l.text(`SIGNATURE — ${data.electricianName}`.toUpperCase(), {
+    size: 6.5,
+    color: palette.muted,
+    x: MARGIN_X,
+    maxWidth: signatureWidth,
+    top: ruleTop + 3,
+  })
+
+  labelledValue(
+    l,
+    MARGIN_X + signatureWidth + 20,
+    ruleTop - 20,
+    dateWidth,
+    'Date',
+    formatDisplayDate(data.signedDate),
+  )
+
+  l.y = ruleTop + 16
+}
+
+/** Header and footer are drawn last, once the total page count is known. */
+function runningFurniture(l, data) {
+  const total = l.pages.length
+  l.pages.forEach((page, index) => {
+    const original = l.page
+    l.page = page
+
+    l.text('Electrical Safety Check – Report', {
+      size: 8,
+      bold: true,
+      color: palette.accent,
+      maxWidth: CONTENT_W / 2,
+      top: 26,
+    })
+    l.text(`${data.reference} · ${data.address}`, {
+      size: 7.5,
+      color: palette.muted,
+      x: MARGIN_X + CONTENT_W / 2,
+      maxWidth: CONTENT_W / 2,
+      top: 27,
+      align: 'right',
+    })
+    l.line(MARGIN_X, 44, MARGIN_X + CONTENT_W)
+
+    l.line(MARGIN_X, 796, MARGIN_X + CONTENT_W)
+    l.text(`${data.organisation} · Issued ${formatDisplayDate(data.signedDate)}`, {
+      size: 7,
+      color: palette.muted,
+      maxWidth: CONTENT_W / 2,
+      top: 802,
+    })
+    l.text(`Page ${index + 1} of ${total}`, {
+      size: 7,
+      color: palette.muted,
+      x: MARGIN_X + CONTENT_W / 2,
+      maxWidth: CONTENT_W / 2,
+      top: 802,
+      align: 'right',
+    })
+
+    l.page = original
+  })
+}
+
+// ---------------------------------------------------------------------------
+// Entry points
+// ---------------------------------------------------------------------------
+
+/** Renders a stored record to PDF bytes. */
+async function renderCertificate(record) {
+  const reference = certificateReference(record.serial, record.inspectionDate)
+  const data = { ...record, reference, organisation: ORGANISATION_NAME }
+
+  const doc = await PDFDocument.create()
+  doc.setTitle(`Electrical Safety Check ${reference}`)
+  doc.setAuthor(ORGANISATION_NAME)
+  doc.setSubject(`Electrical Safety Check – Report for ${record.address}`)
+  doc.setKeywords([
+    'electrical safety check',
+    'Residential Tenancies Regulations 2021',
+    'AS/NZS 3019',
+  ])
+  doc.setCreator(ORGANISATION_NAME)
+  doc.setProducer(ORGANISATION_NAME)
+
+  const fonts = {
+    regular: await doc.embedFont(StandardFonts.Helvetica),
+    bold: await doc.embedFont(StandardFonts.HelveticaBold),
+  }
+
+  let signature = null
+  if (record.signatureImage) {
+    try {
+      signature = await doc.embedPng(record.signatureImage)
+    } catch {
+      // A certificate missing its signature image is still worth producing; the
+      // ruled signature line prints empty.
+      signature = null
+    }
+  }
+
+  const l = new Layout(doc, fonts)
+
+  l.text('Residential Tenancies Regulations 2021', {
+    size: 9.5,
+    bold: true,
+    color: palette.accent,
+    align: 'center',
+  })
+  l.text('Electrical Safety Check – Report', {
+    size: 15,
+    bold: true,
+    color: palette.accent,
+    align: 'center',
+  })
+  l.y += 10
+
+  // Reference strip
+  const stripHeight = 26
+  l.rect(MARGIN_X, l.y, CONTENT_W, stripHeight, {
+    fill: palette.accentSoft,
+    border: palette.line,
+  })
+  const strip = [
+    ['Certificate', reference],
+    ['Inspection date', formatDisplayDate(record.inspectionDate)],
+    ['Next inspection due', formatDisplayDate(record.nextInspectionDue)],
+  ]
+  strip.forEach(([label, value], index) => {
+    const width = CONTENT_W / 3
+    const x = MARGIN_X + 10 + index * width
+    l.text(label.toUpperCase(), {
+      size: 6.5,
+      color: palette.muted,
+      x,
+      maxWidth: width - 10,
+      top: l.y + 6,
+    })
+    l.text(value, { size: 9, bold: true, x, maxWidth: width - 10, top: l.y + 14 })
+  })
+  l.y += stripHeight + 12
+
+  l.text(REGULATION_PREAMBLE, { size: 7.5, color: palette.muted })
+  l.y += 6
+
+  sectionHeading(l, 'A. Installation address')
+  fieldRow(l, [
+    { label: 'Address', value: record.address, flex: 2 },
+    {
+      label: 'Date of previous safety check',
+      value: record.previousCheckDate
+        ? formatDisplayDate(record.previousCheckDate)
+        : 'None recorded',
+    },
+  ])
+
+  CHECKLIST.forEach((section, index) => {
+    checklistBlock(l, section, record.checklist[section.section] || {}, {
+      showLetter: index === 0 || CHECKLIST[index - 1].letter !== section.letter,
+      showLegend: index === 0,
+    })
+  })
+
+  rcdTable(l, record.rcdTests)
+
+  const failures = record.rcdTests.filter(
+    (test) => test.pushButtonTest === 'FAIL' || test.timeTest === 'FAIL',
+  )
+  if (failures.length > 0) failCallout(l, failures.length)
+
+  smokeAlarms(l, record)
+  observations(l, record.observations)
+  await certification(l, record, signature)
+
+  runningFurniture(l, data)
+
+  return doc.save()
+}
+
+/** Renders and hands the file to the browser. */
+async function downloadCertificate(record, { inline = false } = {}) {
+  const bytes = await renderCertificate(record)
+  const reference = certificateReference(record.serial, record.inspectionDate)
+  const blob = new Blob([bytes], { type: 'application/pdf' })
+  const url = URL.createObjectURL(blob)
+
+  if (inline) {
+    window.open(url, '_blank')
+    // Give the new tab time to take the blob before it is revoked.
+    setTimeout(() => URL.revokeObjectURL(url), 60_000)
+    return
+  }
+
+  const link = document.createElement('a')
+  link.href = url
+  link.download = certificateFilename(reference, record.address)
+  document.body.appendChild(link)
+  link.click()
+  link.remove()
+  URL.revokeObjectURL(url)
+}
+
+  return {
+    renderCertificate,
+    downloadCertificate,
+  }
+})
+
+__def('signature.js', function (__req) {
+/**
+ * Draw-to-sign capture.
+ *
+ * The legacy form took the signature as a line of typed text, which is not
+ * meaningfully a signature on a document certifying electrical safety. This
+ * records the actual strokes and hands back a PNG data URL for the PDF.
+ */
+
+function createSignaturePad(canvas, { onChange }) {
+  let drawing = false
+  let hasStrokes = false
+
+  // Size the backing store to the device pixel ratio so strokes are not blurry
+  // on the phones and tablets these get filled in on.
+  function resize() {
+    const { width, height } = canvas.getBoundingClientRect()
+    if (!width || !height) return
+
+    const ratio = window.devicePixelRatio || 1
+    const snapshot = hasStrokes ? canvas.toDataURL('image/png') : null
+
+    canvas.width = Math.round(width * ratio)
+    canvas.height = Math.round(height * ratio)
+
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+    ctx.scale(ratio, ratio)
+    ctx.lineWidth = 2
+    ctx.lineCap = 'round'
+    ctx.lineJoin = 'round'
+    ctx.strokeStyle = '#1c2430'
+
+    if (snapshot) {
+      const image = new Image()
+      image.onload = () => ctx.drawImage(image, 0, 0, width, height)
+      image.src = snapshot
+    }
+  }
+
+  function positionOf(event) {
+    const rect = canvas.getBoundingClientRect()
+    return { x: event.clientX - rect.left, y: event.clientY - rect.top }
+  }
+
+  function start(event) {
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+    // Capture keeps the stroke alive if the pointer leaves the canvas mid
+    // signature. It is not essential, and it throws for pointer ids the browser
+    // no longer considers active, so a failure must not abort the stroke.
+    try {
+      canvas.setPointerCapture(event.pointerId)
+    } catch {
+      // Drawing still works without capture.
+    }
+    drawing = true
+    const { x, y } = positionOf(event)
+    ctx.beginPath()
+    ctx.moveTo(x, y)
+  }
+
+  function move(event) {
+    if (!drawing) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+    const { x, y } = positionOf(event)
+    ctx.lineTo(x, y)
+    ctx.stroke()
+    hasStrokes = true
+  }
+
+  function end() {
+    if (!drawing) return
+    drawing = false
+    if (!hasStrokes) return
+    onChange(canvas.toDataURL('image/png'))
+  }
+
+  function clear() {
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    hasStrokes = false
+    onChange('')
+  }
+
+  canvas.addEventListener('pointerdown', start)
+  canvas.addEventListener('pointermove', move)
+  canvas.addEventListener('pointerup', end)
+  canvas.addEventListener('pointerleave', end)
+  canvas.addEventListener('pointercancel', end)
+  window.addEventListener('resize', resize)
+  resize()
+
+  return {
+    clear,
+    isEmpty: () => !hasStrokes,
+  }
+}
+
+  return {
+    createSignaturePad,
+  }
+})
+
+__def('sample.js', function (__req) {
+/**
+ * A fully populated sample certificate.
+ *
+ * Filling the real form takes a few minutes, which makes it awkward to show
+ * someone the register, the certificate page and the PDF. This writes one
+ * complete record so all three have something to display.
+ *
+ * Offered only when certificates are kept in the browser — there is no reason
+ * to seed fiction into a real database.
+ */
+
+const { CHECKLIST } = __req('catalog.js')
+const { addYears, todayDateOnly } = __req('dates.js')
+const { createSafetyCheck } = __req('db.js')
+const { validateSafetyCheck } = __req('validate.js')
+const ADDRESSES = [
+  '14 Ballarat Road, Footscray VIC 3011',
+  '221B Sydney Road, Brunswick VIC 3056',
+  '7/58 Nicholson Street, Coburg VIC 3058',
+  '92 Geelong Road, Seddon VIC 3011',
+  '3 Rosamond Road, Maidstone VIC 3012',
+]
+
+const ELECTRICIANS = [
+  { name: 'Brandon Ferry', licence: 'REC 35346' },
+  { name: 'Alicia Nguyen', licence: 'REC 41882' },
+  { name: 'Marcus Whitfield', licence: 'REC 28104' },
+]
+
+/** Draws a plausible signature so the PDF has something real to embed. */
+function drawSignature(name) {
+  const canvas = document.createElement('canvas')
+  canvas.width = 420
+  canvas.height = 130
+
+  const ctx = canvas.getContext('2d')
+  ctx.strokeStyle = '#1c2430'
+  ctx.lineWidth = 2.4
+  ctx.lineCap = 'round'
+  ctx.lineJoin = 'round'
+
+  // Seed the wobble from the name so each electrician signs consistently.
+  let seed = [...name].reduce((sum, c) => sum + c.charCodeAt(0), 0)
+  const next = () => {
+    seed = (seed * 1103515245 + 12345) % 2147483648
+    return seed / 2147483648
+  }
+
+  ctx.beginPath()
+  ctx.moveTo(24, 90)
+  let x = 24
+  while (x < 380) {
+    const step = 26 + next() * 22
+    const peak = 30 + next() * 45
+    ctx.quadraticCurveTo(x + step / 2, peak, x + step, 70 + next() * 30)
+    x += step
+  }
+  ctx.stroke()
+
+  // The trailing flourish most signatures end on.
+  ctx.beginPath()
+  ctx.moveTo(30, 104)
+  ctx.quadraticCurveTo(200, 118, 360, 96)
+  ctx.lineWidth = 1.6
+  ctx.stroke()
+
+  return canvas.toDataURL('image/png')
+}
+
+/**
+ * Answers every checklist line, mostly checked, with a scattering of N/A and NI
+ * so the three states are all visible on the certificate.
+ */
+function checklist() {
+  const answers = {}
+  for (const section of CHECKLIST) {
+    answers[section.section] = {}
+    section.items.forEach((item, index) => {
+      const every = index % 7
+      answers[section.section][item.key] =
+        every === 3 ? 'NOT_APPLICABLE' : every === 5 ? 'NOT_INCLUDED' : 'INCLUDED'
+    })
+  }
+  return answers
+}
+
+function pick(list, offset) {
+  return list[offset % list.length]
+}
+
+/**
+ * Writes one sample certificate and returns its id.
+ *
+ * `offset` varies the address, electrician and inspection date so repeated
+ * calls build a register worth looking at rather than five identical rows.
+ */
+async function addSampleCertificate(offset = 0) {
+  const electrician = pick(ELECTRICIANS, offset)
+  const inspection = addYears(todayDateOnly(), 0)
+
+  // Walk the inspection back a few days per sample so the register sorts.
+  const inspectionDate = new Date(inspection)
+  inspectionDate.setUTCDate(inspectionDate.getUTCDate() - offset * 11)
+  const inspected = inspectionDate.toISOString().slice(0, 10)
+
+  const failing = offset % 3 === 1
+
+  const payload = {
+    address: pick(ADDRESSES, offset),
+    previousCheckDate: addYears(inspected, -2),
+    checklist: checklist(),
+    rcdTests: [
+      { circuit: 'Power outlets — kitchen and living', pushButtonTest: 'PASS', timeTest: 'PASS' },
+      { circuit: 'Power outlets — bedrooms', pushButtonTest: 'PASS', timeTest: 'PASS' },
+      {
+        circuit: 'Lighting — ground floor',
+        pushButtonTest: failing ? 'FAIL' : 'PASS',
+        timeTest: 'PASS',
+      },
+      { circuit: 'Lighting — upper floor', pushButtonTest: 'PASS', timeTest: 'NA' },
+      { circuit: 'Air conditioning', pushButtonTest: 'PASS', timeTest: 'PASS' },
+      { circuit: 'Solar inverter isolator', pushButtonTest: 'PASS', timeTest: 'PASS' },
+    ],
+    smokeAlarmsCompliant: !failing,
+    smokeAlarmDueDate: addYears(inspected, 1),
+    observations: failing
+      ? 'Ground floor lighting RCD did not trip on the push button test and is recommended for ' +
+        'replacement before the property is re-let. Hallway smoke alarm is beyond its ten year ' +
+        'service life and was not replaced during this visit.'
+      : 'No defects found. All circuits tested within tolerance.',
+    electricianName: electrician.name,
+    licenceNumber: electrician.licence,
+    inspectionDate: inspected,
+    nextInspectionDue: addYears(inspected, 2),
+    signatureImage: drawSignature(electrician.name),
+    signedDate: inspected,
+  }
+
+  // Sample data goes through the same rules as anything an electrician types,
+  // so a sample can never be something the form itself would have rejected.
+  const result = validateSafetyCheck(payload)
+  if (!result.ok) {
+    throw new Error(`The sample certificate is not valid: ${JSON.stringify(result.fieldErrors)}`)
+  }
+
+  return createSafetyCheck(result.values)
+}
+
+  return {
+    addSampleCertificate,
+  }
+})
+
+__def('register.js', function (__req) {
+/**
+ * The register: every certificate issued, newest inspection first, with search.
+ *
+ * The legacy PHP page had no register at all — a certificate went into the
+ * `safety` table and was never shown again.
+ */
+
+const { ORGANISATION_NAME } = __req('config.js')
+const { formatDisplayDate, parseDateOnly, todayDateOnly } = __req('dates.js')
+const { getSafetyCheck, isConfigured, isDurable, listSafetyChecks, storageFallback } = __req('db.js')
+const { el, errorPanel, ensureStorageBanner, notice, pageHref, param, qs, render } = __req('dom.js')
+const { downloadCertificate } = __req('pdf.js')
+const { certificateReference } = __req('reference.js')
+let results = null
+let search = ''
+let banner = null
+let wired = false
+
+/**
+ * Renders the register into the markup already on the page.
+ *
+ * Called once per page load in the multi-page build, and again on every hash
+ * change in the single-file one, so anything that attaches a listener has to be
+ * guarded.
+ */
+function init() {
+  results = qs('#results')
+  search = param('q') || ''
+
+  qs('[data-organisation]').textContent = ORGANISATION_NAME
+  qs('input[name="q"]').value = search
+
+  if (!wired) {
+    wired = true
+    // The single-file build has no second page to GET, so searching moves the
+    // hash and lets the router re-enter here.
+    qs('#register-search').addEventListener('submit', (event) => {
+      event.preventDefault()
+      window.location.href = pageHref('register', { q: qs('input[name="q"]').value })
+    })
+  }
+
+  if (!isDurable) {
+    banner = ensureStorageBanner()
+  }
+
+  if (!isConfigured()) {
+    render(
+      results,
+      errorPanel('Open js/config.js and fill in your Supabase project URL and anon key.'),
+    )
+    return
+  }
+
+  load()
+}
+
+async function load() {
+  try {
+    const checks = await listSafetyChecks(search)
+    render(results, checks.length === 0 ? emptyState() : table(checks))
+    if (storageFallback.active && banner) banner.noteFallback(storageFallback.reason, storageFallback.persists)
+  } catch (error) {
+    render(results, errorPanel(error.message))
+  }
+}
+
+function emptyState() {
+  const actions = el('div', {
+    style: 'display:flex;gap:.5rem;justify-content:center;margin-top:1rem;flex-wrap:wrap',
+  }, [
+    el('a', { class: 'btn btn--primary', href: pageHref('new') }, 'Start a safety check'),
+    // Filling the form takes a few minutes, which makes it awkward to show
+    // anyone the register. Seeding is offered only for browser storage.
+    !search && !isDurable ? sampleButton() : null,
+  ])
+
+  return notice(
+    search ? `No certificates match “${search}”.` : 'No certificates have been issued yet.',
+    actions,
+  )
+}
+
+function sampleButton() {
+  const button = el('button', { class: 'btn', type: 'button' }, 'Add sample certificates')
+
+  button.addEventListener('click', async () => {
+    button.disabled = true
+    button.textContent = 'Adding…'
+    try {
+      const { addSampleCertificate } = __req('sample.js')
+      for (let i = 0; i < 4; i++) await addSampleCertificate(i)
+      await load()
+    } catch (error) {
+      console.error(error)
+      button.textContent = 'Failed'
+      button.disabled = false
+    }
+  })
+
+  return button
+}
+
+function table(checks) {
+  const today = parseDateOnly(todayDateOnly())
+
+  const head = el('thead', {}, el('tr', {}, [
+    el('th', {}, 'Certificate'),
+    el('th', {}, 'Address'),
+    el('th', {}, 'Electrician'),
+    el('th', {}, 'Inspected'),
+    el('th', {}, 'Next due'),
+    el('th', { class: 'no-print' }),
+  ]))
+
+  const body = el('tbody', {}, checks.map((check) => {
+    const overdue = check.nextInspectionDue.getTime() < today.getTime()
+    const reference = certificateReference(check.serial, check.inspectionDate)
+
+    return el('tr', {}, [
+      el('td', {}, el('a', { href: pageHref('check', { id: check.id }) }, reference)),
+      el('td', {}, check.address),
+      el('td', { class: 'muted' }, check.electricianName),
+      el('td', { class: 'muted numeric' }, formatDisplayDate(check.inspectionDate)),
+      el('td', { class: overdue ? 'overdue numeric' : 'muted numeric' },
+        formatDisplayDate(check.nextInspectionDue) + (overdue ? ' · overdue' : '')),
+      el('td', { class: 'no-print', style: 'text-align:right' }, pdfButton(check)),
+    ])
+  }))
+
+  return el('div', { class: 'register-table' }, el('table', {}, [head, body]))
+}
+
+/**
+ * The PDF is built in the browser from the stored record, so the row has to
+ * fetch the full certificate first. The button reports its own progress rather
+ * than leaving the page looking idle.
+ */
+function pdfButton(check) {
+  const button = el('button', { class: 'btn btn--small', type: 'button' }, 'PDF')
+
+  button.addEventListener('click', async () => {
+    const original = button.textContent
+    button.disabled = true
+    button.textContent = 'Building…'
+    try {
+      const record = await getSafetyCheck(check.id)
+      if (!record) throw new Error('That certificate could not be found.')
+      await downloadCertificate(record)
+      button.textContent = original
+    } catch (error) {
+      button.textContent = 'Failed'
+      console.error(error)
+      window.setTimeout(() => {
+        button.textContent = original
+      }, 3000)
+    } finally {
+      button.disabled = false
+    }
+  })
+
+  return button
+}
+
+  return {
+    init,
+  }
+})
+
+__def('detail.js', function (__req) {
+/**
+ * One stored certificate, with the PDF built on demand from the same record.
+ */
+
+const { CHECKLIST, ITEM_STATE_LABELS, TEST_RESULT_LABELS } = __req('catalog.js')
+const { ORGANISATION_NAME } = __req('config.js')
+const { formatDisplayDate } = __req('dates.js')
+const { getSafetyCheck, isConfigured, isDurable, storageFallback } = __req('db.js')
+const { el, errorPanel, ensureStorageBanner, notice, pageHref, param, qs, render } = __req('dom.js')
+const { downloadCertificate } = __req('pdf.js')
+const { certificateReference } = __req('reference.js')
+let root = null
+let id = null
+let banner = null
+
+function init() {
+  root = qs('#certificate')
+  id = param('id')
+
+  qs('[data-organisation]').textContent = ORGANISATION_NAME
+
+  if (!isDurable) {
+    banner = ensureStorageBanner()
+  }
+
+  if (!isConfigured()) {
+    render(root, errorPanel('Open js/config.js and fill in your Supabase project URL and anon key.'))
+    return
+  }
+
+  if (!id) {
+    render(root, notice('No certificate was requested.', backLink()))
+    return
+  }
+
+  load()
+}
+
+function backLink() {
+  return el('a', { class: 'btn', href: pageHref('register'), style: 'margin-top:1rem' },
+    'Back to register')
+}
+
+async function load() {
+  render(root, el('p', { class: 'muted' }, 'Loading the certificate…'))
+  try {
+    const record = await getSafetyCheck(id)
+    if (storageFallback.active && banner) banner.noteFallback(storageFallback.reason, storageFallback.persists)
+    if (!record) {
+      document.title = 'Certificate not found'
+      render(root, notice('That certificate could not be found.', backLink()))
+      return
+    }
+    renderCertificate(record)
+  } catch (error) {
+    render(root, errorPanel(error.message))
+  }
+}
+
+function renderCertificate(record) {
+  const reference = certificateReference(record.serial, record.inspectionDate)
+  document.title = `${reference} — ${record.address}`
+
+  const failures = record.rcdTests.filter(
+    (test) => test.pushButtonTest === 'FAIL' || test.timeTest === 'FAIL',
+  )
+
+  render(root, [
+    header(record, reference),
+    failures.length > 0 ? failureBanner(failures.length) : null,
+    summary(record),
+    ...CHECKLIST.map((section) => checklistCard(section, record.checklist[section.section] || {})),
+    rcdCard(record.rcdTests),
+    observationsCard(record.observations),
+  ])
+}
+
+function header(record, reference) {
+  return el('div', { class: 'toolbar no-print' }, [
+    el('div', {}, [
+      el('a', { href: pageHref('register'), class: 'muted', style: 'font-size:.75rem' },
+        '← Back to register'),
+      el('h1', { class: 'page-title', style: 'margin-top:.25rem' }, reference),
+      el('p', { class: 'muted' }, record.address),
+    ]),
+    el('div', { class: 'actions' }, [
+      pdfButton(record, { inline: true, label: 'View PDF', className: 'btn' }),
+      pdfButton(record, { inline: false, label: 'Download PDF', className: 'btn btn--primary' }),
+    ]),
+  ])
+}
+
+function pdfButton(record, { inline, label, className }) {
+  const button = el('button', { class: className, type: 'button' }, label)
+
+  button.addEventListener('click', async () => {
+    button.disabled = true
+    button.textContent = 'Building…'
+    try {
+      await downloadCertificate(record, { inline })
+      button.textContent = label
+    } catch (error) {
+      button.textContent = 'Failed'
+      console.error(error)
+      window.setTimeout(() => {
+        button.textContent = label
+      }, 3000)
+    } finally {
+      button.disabled = false
+    }
+  })
+
+  return button
+}
+
+function failureBanner(count) {
+  return el('div', { class: 'alert', role: 'alert' },
+    `${count} RCD test${count === 1 ? '' : 's'} failed on this installation.`)
+}
+
+function summary(record) {
+  const items = [
+    ['Inspection date', formatDisplayDate(record.inspectionDate)],
+    ['Next inspection due', formatDisplayDate(record.nextInspectionDue)],
+    ['Previous check', formatDisplayDate(record.previousCheckDate)],
+    ['Smoke alarms due', formatDisplayDate(record.smokeAlarmDueDate)],
+    ['Electrician', record.electricianName],
+    ['Licence number', record.licenceNumber],
+    ['Smoke alarms compliant', record.smokeAlarmsCompliant ? 'Yes' : 'No'],
+    ['Signed', formatDisplayDate(record.signedDate)],
+  ]
+
+  return el('dl', { class: 'card summary-grid' },
+    items.flatMap(([label, value]) => [el('dt', {}, label), el('dd', {}, value)]))
+}
+
+function checklistCard(section, states) {
+  return el('section', { class: 'card' }, [
+    el('div', { class: 'section-heading' },
+      el('h2', { class: 'section-heading__title', style: 'border-bottom:1px solid var(--line);padding-bottom:.5rem' },
+        `${section.letter}. ${section.subtitle || section.title}`)),
+    el('ul', { class: 'checklist detail-list', style: 'margin-top:.75rem' },
+      section.items.map((item) => {
+        const state = states[item.key]
+        return el('li', { dataset: { state: state || '' } }, [
+          el('span', {}, item.label),
+          state ? el('span', { class: 'badge', dataset: { state } }, ITEM_STATE_LABELS[state]) : null,
+        ])
+      })),
+  ])
+}
+
+function rcdCard(tests) {
+  const head = el('thead', {}, el('tr', {}, [
+    el('th', {}, 'Circuit protected'),
+    el('th', {}, 'Push button'),
+    el('th', {}, 'Time test'),
+  ]))
+
+  const body = el('tbody', {}, tests.map((test) =>
+    el('tr', {}, [
+      el('td', {}, test.circuit),
+      el('td', { class: test.pushButtonTest === 'FAIL' ? 'overdue' : '' },
+        TEST_RESULT_LABELS[test.pushButtonTest]),
+      el('td', { class: test.timeTest === 'FAIL' ? 'overdue' : '' },
+        TEST_RESULT_LABELS[test.timeTest]),
+    ])))
+
+  return el('section', { class: 'card' }, [
+    el('h2', { class: 'section-heading__title', style: 'border-bottom:1px solid var(--line);padding-bottom:.5rem' },
+      'D. RCD testing'),
+    el('div', { class: 'table-scroll', style: 'margin-top:.75rem' },
+      el('table', { class: 'rcd-table' }, [head, body])),
+  ])
+}
+
+function observationsCard(observations) {
+  const body = observations.trim()
+  return el('section', { class: 'card' }, [
+    el('h2', { class: 'section-heading__title', style: 'border-bottom:1px solid var(--line);padding-bottom:.5rem' },
+      'F. Observations and recommendations'),
+    el('p', { class: body ? 'prewrap' : 'muted', style: 'margin-top:.75rem' },
+      body || 'No observations were recorded.'),
+  ])
+}
+
+  return {
+    init,
+  }
+})
+
+__def('form.js', function (__req) {
+/**
+ * The safety check form.
+ *
+ * The checklist sections, their wording and their line items all come from
+ * catalog.js, so the form, the validation and the certificate cannot drift
+ * apart the way the legacy page's three hand-maintained copies did.
+ */
+
+const { CERTIFICATION_DECLARATION, CHECKLIST, DEFAULT_RCD_CIRCUITS, ITEM_STATES, ITEM_STATE_DESCRIPTIONS, ITEM_STATE_LABELS, REGULATION_PREAMBLE, SMOKE_ALARM_NOTE, TEST_RESULTS, TEST_RESULT_LABELS } = __req('catalog.js')
+const { ORGANISATION_NAME } = __req('config.js')
+const { ELECTRICAL_CHECK_INTERVAL_YEARS, SMOKE_ALARM_INTERVAL_YEARS, addYears, todayDateOnly } = __req('dates.js')
+const { createSafetyCheck, isConfigured, isDurable, storageFallback } = __req('db.js')
+const { el, ensureStorageBanner, pageHref, qs, render } = __req('dom.js')
+const { createSignaturePad } = __req('signature.js')
+const { validateSafetyCheck } = __req('validate.js')
+let form = null
+
+/** Every checklist line starts unanswered, so each one takes a deliberate choice. */
+function blankState() {
+  const today = todayDateOnly()
+
+  return {
+    address: '',
+    previousCheckDate: '',
+    checklist: Object.fromEntries(CHECKLIST.map((s) => [s.section, {}])),
+    rcdTests: DEFAULT_RCD_CIRCUITS.map((circuit) => ({
+      circuit,
+      pushButtonTest: 'PASS',
+      timeTest: 'PASS',
+    })),
+    smokeAlarmsCompliant: true,
+    smokeAlarmDueDate: addYears(today, SMOKE_ALARM_INTERVAL_YEARS),
+    observations: '',
+    electricianName: '',
+    licenceNumber: '',
+    inspectionDate: today,
+    nextInspectionDue: addYears(today, ELECTRICAL_CHECK_INTERVAL_YEARS),
+    signatureImage: '',
+    signedDate: today,
+  }
+}
+
+let state = blankState()
+
+/** Fields the electrician has edited by hand, which the date defaults stop tracking. */
+let dirty = new Set()
+
+/** Dotted path -> the elements that display that field's error. */
+let errorSlots = new Map()
+
+let alertBox = null
+let submitButton = null
+let banner = null
+let submitWired = false
+
+/**
+ * Builds a blank form into the markup already on the page.
+ *
+ * The single-file build can re-enter this view after a certificate has been
+ * issued, so the state is rebuilt from scratch rather than carried over — an
+ * electrician starting a second check must not inherit the first one's answers.
+ */
+function init() {
+  form = qs('#safety-check')
+  qs('[data-organisation]').textContent = ORGANISATION_NAME
+
+  state = blankState()
+  dirty = new Set()
+  errorSlots = new Map()
+  banner = null
+
+  build()
+}
+
+// ---------------------------------------------------------------------------
+// Field primitives
+// ---------------------------------------------------------------------------
+
+function field(path, label, control, { hint, required, className } = {}) {
+  const error = el('p', { class: 'field__error', role: 'alert', hidden: true })
+  errorSlots.set(path, { control, error })
+
+  return el('div', { class: className || '' }, [
+    el('label', { class: 'field__label', for: path }, [
+      label,
+      required ? el('span', { class: 'required' }, '*') : null,
+    ]),
+    control,
+    hint ? el('p', { class: 'field__hint' }, hint) : null,
+    error,
+  ])
+}
+
+function textInput(path, options = {}) {
+  const input = el('input', {
+    type: options.type || 'text',
+    id: path,
+    name: path,
+    value: state[path] || '',
+    placeholder: options.placeholder,
+    autocomplete: options.autocomplete,
+  })
+
+  input.addEventListener('input', () => {
+    state[path] = input.value
+    dirty.add(path)
+    clearError(path)
+    if (options.onInput) options.onInput(input.value)
+  })
+
+  return input
+}
+
+function clearError(path) {
+  const slot = errorSlots.get(path)
+  if (!slot) return
+  slot.error.hidden = true
+  slot.error.textContent = ''
+  slot.control?.removeAttribute?.('aria-invalid')
+}
+
+function showErrors(fieldErrors) {
+  for (const slot of errorSlots.values()) {
+    slot.error.hidden = true
+    slot.error.textContent = ''
+    slot.control?.removeAttribute?.('aria-invalid')
+  }
+
+  let first = null
+  const shown = new Set()
+
+  for (const [path, message] of Object.entries(fieldErrors)) {
+    // Checklist errors are reported once per section rather than per line.
+    const slot = errorSlots.get(path) || errorSlots.get(sectionOf(path))
+    if (!slot) continue
+    slot.error.hidden = false
+    slot.error.textContent = path.startsWith('checklist.')
+      ? 'Answer every line in this section before submitting.'
+      : message
+    slot.control?.setAttribute?.('aria-invalid', 'true')
+    shown.add(slot.error)
+    if (!first) first = slot.error
+  }
+
+  // The count is of messages the electrician can actually see. Counting raw
+  // field paths would report 51 problems above eight visible messages, because
+  // a whole unanswered checklist section collapses into one of them.
+  return { first, count: shown.size }
+}
+
+function sectionOf(path) {
+  const parts = path.split('.')
+  return parts[0] === 'checklist' ? `checklist.${parts[1]}` : parts.slice(0, 2).join('.')
+}
+
+// ---------------------------------------------------------------------------
+// Sections
+// ---------------------------------------------------------------------------
+
+function heading(title, { letter, intro, action } = {}) {
+  return el('div', { class: 'section-heading' }, [
+    el('div', { class: 'section-heading__row' }, [
+      el('h2', { class: 'section-heading__title' }, letter ? `${letter}. ${title}` : title),
+      action,
+    ]),
+    intro ? el('p', { class: 'section-heading__intro' }, intro) : null,
+  ])
+}
+
+function addressSection() {
+  return el('section', { class: 'card' }, [
+    heading('Installation address', { letter: 'A' }),
+    el('div', { class: 'grid grid--3' }, [
+      field('address', 'Address',
+        textInput('address', {
+          placeholder: '123 Geelong Road, Footscray VIC 3011',
+          autocomplete: 'street-address',
+        }),
+        { required: true, className: 'span-2' }),
+      field('previousCheckDate', 'Date of previous safety check',
+        textInput('previousCheckDate', { type: 'date' }),
+        { hint: 'Leave blank if this is the first check.' }),
+    ]),
+  ])
+}
+
+/**
+ * One statutory checklist, rendered as a three-state control per line.
+ *
+ * The form's own instructions ask for three outcomes — checked, not applicable,
+ * or not included — which a plain checkbox cannot express. The bulk buttons keep
+ * that from becoming tedious: mark the whole section, then override the lines
+ * that differ.
+ */
+function checklistSection(definition, showLetter) {
+  const section = definition.section
+  const answers = state.checklist[section]
+  const tally = el('span', { class: 'tally' })
+  const rows = new Map()
+
+  const refreshTally = () => {
+    const answered = definition.items.filter((item) => answers[item.key]).length
+    tally.textContent = `${answered}/${definition.items.length} answered`
+    tally.dataset.complete = String(answered === definition.items.length)
+  }
+
+  const setState = (key, value) => {
+    answers[key] = value
+    const row = rows.get(key)
+    row.li.dataset.state = value
+    for (const button of row.buttons) {
+      button.setAttribute('aria-checked', String(button.dataset.state === value))
+    }
+    refreshTally()
+    clearError(`checklist.${section}`)
+  }
+
+  const list = el('ul', { class: 'checklist' }, definition.items.map((item) => {
+    const buttons = ITEM_STATES.map((value) =>
+      el('button', {
+        type: 'button',
+        role: 'radio',
+        'aria-checked': 'false',
+        dataset: { state: value },
+        title: ITEM_STATE_DESCRIPTIONS[value],
+        onClick: () => setState(item.key, value),
+      }, ITEM_STATE_LABELS[value]))
+
+    const li = el('li', { class: 'checklist__row' }, [
+      el('span', { class: 'checklist__label' }, item.label),
+      el('div', { class: 'states', role: 'radiogroup', 'aria-label': item.label }, buttons),
+    ])
+
+    rows.set(item.key, { li, buttons })
+    return li
+  }))
+
+  const markAll = (value) => definition.items.forEach((item) => setState(item.key, value))
+  const markRemaining = (value) =>
+    definition.items.forEach((item) => {
+      if (!answers[item.key]) setState(item.key, value)
+    })
+
+  const error = el('p', { class: 'field__error', role: 'alert', hidden: true })
+  errorSlots.set(`checklist.${section}`, { control: null, error })
+
+  refreshTally()
+
+  return el('section', { class: 'card' }, [
+    heading(showLetter ? definition.title : definition.subtitle, {
+      letter: showLetter ? definition.letter : undefined,
+      intro: definition.intro || undefined,
+      action: el('div', { style: 'display:flex;flex-wrap:wrap;gap:.5rem;align-items:center' }, [
+        tally,
+        el('button', { type: 'button', class: 'btn btn--small', onClick: () => markAll('INCLUDED') },
+          'Mark all checked'),
+        el('button', { type: 'button', class: 'btn btn--small', onClick: () => markRemaining('NOT_APPLICABLE') },
+          'Rest N/A'),
+      ]),
+    }),
+    showLetter && definition.subtitle
+      ? el('p', { class: 'field__label', style: 'margin-bottom:.5rem' }, definition.subtitle)
+      : null,
+    list,
+    error,
+  ])
+}
+
+/**
+ * The RCD test table.
+ *
+ * The legacy form had ten hard-coded slots — six with fixed labels the database
+ * never stored, plus four spares — so an installation with more safety switches
+ * could not be recorded at all. Rows are now data.
+ */
+function rcdSection() {
+  const body = el('tbody')
+  const error = el('p', { class: 'field__error', role: 'alert', hidden: true })
+  errorSlots.set('rcdTests', { control: null, error })
+
+  const redraw = () => {
+    // Row indices appear in error paths, so they are rebuilt whenever the set
+    // of rows changes.
+    for (const key of [...errorSlots.keys()]) {
+      if (key.startsWith('rcdTests.')) errorSlots.delete(key)
+    }
+
+    render(body, state.rcdTests.map((row, index) => {
+      const circuit = el('input', {
+        type: 'text',
+        value: row.circuit,
+        placeholder: 'e.g. Power outlets',
+        'aria-label': `Circuit protected, row ${index + 1}`,
+      })
+      const circuitError = el('p', { class: 'field__error', role: 'alert', hidden: true })
+      errorSlots.set(`rcdTests.${index}.circuit`, { control: circuit, error: circuitError })
+
+      circuit.addEventListener('input', () => {
+        row.circuit = circuit.value
+        clearError(`rcdTests.${index}.circuit`)
+      })
+
+      const select = (key) => {
+        const control = el('select', {
+          'aria-label': `${key === 'pushButtonTest' ? 'Push button test' : 'Time test'}, row ${index + 1}`,
+        }, TEST_RESULTS.map((result) =>
+          el('option', { value: result, selected: row[key] === result }, TEST_RESULT_LABELS[result])))
+        control.value = row[key]
+        control.addEventListener('change', () => {
+          row[key] = control.value
+        })
+        return control
+      }
+
+      const remove = el('button', {
+        type: 'button',
+        class: 'btn btn--small',
+        'aria-label': `Remove row ${index + 1}`,
+        disabled: state.rcdTests.length === 1,
+        onClick: () => {
+          state.rcdTests.splice(index, 1)
+          redraw()
+        },
+      }, '×')
+
+      return el('tr', {}, [
+        el('td', {}, [circuit, circuitError]),
+        el('td', {}, select('pushButtonTest')),
+        el('td', {}, select('timeTest')),
+        el('td', { style: 'text-align:right' }, remove),
+      ])
+    }))
+  }
+
+  redraw()
+
+  return el('section', { class: 'card' }, [
+    heading('RCD (residual current device / safety switch) testing', {
+      intro: 'Record every RCD in the installation. Add a row for each additional safety switch.',
+    }),
+    el('div', { class: 'table-scroll' }, el('table', { class: 'rcd-table' }, [
+      el('thead', {}, el('tr', {}, [
+        el('th', {}, 'Circuit protected'),
+        el('th', {}, 'Push button test'),
+        el('th', {}, 'Time test'),
+        el('th', {}),
+      ])),
+      body,
+    ])),
+    el('button', {
+      type: 'button',
+      class: 'btn',
+      style: 'margin-top:.75rem',
+      onClick: () => {
+        state.rcdTests.push({ circuit: '', pushButtonTest: 'PASS', timeTest: 'PASS' })
+        redraw()
+      },
+    }, 'Add RCD row'),
+    error,
+  ])
+}
+
+function smokeAlarmSection() {
+  const options = [
+    { label: 'Yes', value: true },
+    { label: 'No', value: false },
+  ].map((option) => {
+    const input = el('input', {
+      type: 'radio',
+      name: 'smokeAlarmsCompliant',
+      checked: state.smokeAlarmsCompliant === option.value,
+    })
+    input.addEventListener('change', () => {
+      state.smokeAlarmsCompliant = option.value
+      clearError('observations')
+    })
+    return el('label', {}, [input, option.label])
+  })
+
+  return el('section', { class: 'card' }, [
+    heading('Smoke alarms', { letter: 'E' }),
+    el('div', { class: 'grid grid--2' }, [
+      el('fieldset', {}, [
+        el('legend', {}, [
+          'All smoke alarms are correctly installed, in working condition, and have been tested ' +
+          'according to the manufacturer’s instructions.',
+          el('span', { class: 'required' }, '*'),
+        ]),
+        el('div', { class: 'radio-row' }, options),
+      ]),
+      field('smokeAlarmDueDate', 'Next smoke alarm check due by',
+        textInput('smokeAlarmDueDate', { type: 'date' }),
+        { required: true, hint: SMOKE_ALARM_NOTE }),
+    ]),
+  ])
+}
+
+function observationsSection() {
+  const textarea = el('textarea', {
+    id: 'observations',
+    rows: 5,
+    placeholder: 'Record any defects found, actions taken, and work recommended.',
+  })
+  textarea.value = state.observations
+  textarea.addEventListener('input', () => {
+    state.observations = textarea.value
+    clearError('observations')
+  })
+
+  return el('section', { class: 'card' }, [
+    heading('Observations and recommendations for any actions to be taken', { letter: 'F' }),
+    field('observations', 'The following observations and recommendations are made', textarea),
+  ])
+}
+
+function certificationSection() {
+  const canvas = el('canvas', { class: 'signature-pad', role: 'img', 'aria-label': 'Signature' })
+  const status = el('span', {}, 'Sign above using a finger, stylus or mouse.')
+
+  const pad = createSignaturePad(canvas, {
+    onChange: (dataUrl) => {
+      state.signatureImage = dataUrl
+      status.textContent = dataUrl ? 'Signed.' : 'Sign above using a finger, stylus or mouse.'
+      clearError('signatureImage')
+    },
+  })
+
+  const signatureError = el('p', { class: 'field__error', role: 'alert', hidden: true })
+  errorSlots.set('signatureImage', { control: canvas, error: signatureError })
+
+  return el('section', { class: 'card' }, [
+    heading('Electrical safety check certification', { letter: 'G' }),
+    el('div', { class: 'grid grid--2' }, [
+      field('electricianName', 'Electrical safety check completed by',
+        textInput('electricianName', { autocomplete: 'name' }), { required: true }),
+      field('licenceNumber', 'Licence / registration number',
+        textInput('licenceNumber'), { required: true }),
+      field('inspectionDate', 'Inspection date',
+        textInput('inspectionDate', { type: 'date', onInput: onInspectionDateChange }),
+        { required: true }),
+      field('nextInspectionDue', 'Next inspection due by',
+        textInput('nextInspectionDue', { type: 'date' }),
+        {
+          required: true,
+          hint: `Defaults to ${ELECTRICAL_CHECK_INTERVAL_YEARS} years after the inspection date.`,
+        }),
+    ]),
+    el('p', { class: 'certificate-header__preamble' }, CERTIFICATION_DECLARATION),
+    el('div', { class: 'grid grid--2', style: 'margin-top:1rem' }, [
+      el('div', {}, [
+        el('label', { class: 'field__label' }, ['Signature', el('span', { class: 'required' }, '*')]),
+        canvas,
+        el('div', { class: 'signature-meta' }, [
+          status,
+          el('button', { type: 'button', class: 'btn btn--small', onClick: () => pad.clear() }, 'Clear'),
+        ]),
+        signatureError,
+      ]),
+      field('signedDate', 'Date', textInput('signedDate', { type: 'date' }), { required: true }),
+    ]),
+  ])
+}
+
+/**
+ * Both follow-up dates are set by regulation — two years for the electrical
+ * check, twelve months for smoke alarms — so they track the inspection date
+ * until the electrician overrides one.
+ */
+function onInspectionDateChange(value) {
+  const follow = [
+    ['nextInspectionDue', ELECTRICAL_CHECK_INTERVAL_YEARS],
+    ['smokeAlarmDueDate', SMOKE_ALARM_INTERVAL_YEARS],
+    ['signedDate', 0],
+  ]
+
+  for (const [path, years] of follow) {
+    if (dirty.has(path)) continue
+    const next = years === 0 ? value : addYears(value, years)
+    state[path] = next
+    const slot = errorSlots.get(path)
+    if (slot?.control) slot.control.value = next
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Assembly and submit
+// ---------------------------------------------------------------------------
+
+function build() {
+  alertBox = el('div', { class: 'alert', role: 'alert', hidden: true })
+  submitButton = el('button', { type: 'submit', class: 'btn btn--primary btn--submit' },
+    'Issue certificate')
+
+  render(form, [
+    el('header', { class: 'card card--pad certificate-header' }, [
+      el('p', { class: 'certificate-header__regulation' }, 'Residential Tenancies Regulations 2021'),
+      el('h1', { class: 'certificate-header__title' }, 'Electrical Safety Check – Report'),
+      el('p', { class: 'certificate-header__preamble' }, REGULATION_PREAMBLE),
+    ]),
+    alertBox,
+    addressSection(),
+    ...CHECKLIST.map((definition, index) =>
+      checklistSection(definition, index === 0 || CHECKLIST[index - 1].letter !== definition.letter)),
+    rcdSection(),
+    smokeAlarmSection(),
+    observationsSection(),
+    certificationSection(),
+    el('div', { style: 'display:flex;justify-content:flex-end' }, submitButton),
+  ])
+
+  if (!isDurable) {
+    banner = ensureStorageBanner()
+    if (storageFallback.active) banner.noteFallback(storageFallback.reason, storageFallback.persists)
+  }
+
+  if (!isConfigured()) {
+    fail('Open js/config.js and fill in your Supabase project URL and anon key before issuing certificates.')
+    submitButton.disabled = true
+  }
+
+  // The single-file build re-enters init() on every hash change, but the form
+  // element itself persists, so the handler is attached only once.
+  if (!submitWired) {
+    submitWired = true
+    form.addEventListener('submit', onSubmit)
+  }
+}
+
+function fail(message, detail) {
+  alertBox.hidden = false
+  render(alertBox, [
+    el('p', { class: 'alert__title' }, message),
+    detail ? el('p', { class: 'alert__detail' }, detail) : null,
+  ])
+}
+
+async function onSubmit(event) {
+  event.preventDefault()
+  alertBox.hidden = true
+
+  const result = validateSafetyCheck(state)
+
+  if (!result.ok) {
+    const { first, count } = showErrors(result.fieldErrors)
+    fail(result.formError,
+      `${count} field${count === 1 ? '' : 's'} below ${count === 1 ? 'needs' : 'need'} attention.`)
+    ;(first || alertBox).scrollIntoView({ behavior: 'smooth', block: 'center' })
+    return
+  }
+
+  submitButton.disabled = true
+  submitButton.textContent = 'Issuing certificate…'
+
+  try {
+    const id = await createSafetyCheck(result.values)
+    window.location.href = pageHref('check', { id })
+  } catch (error) {
+    // The legacy page redirected to "Form Submitted Successfully" whether or not
+    // the insert worked, so a failed write looked identical to a saved one.
+    console.error('Failed to store safety check', error)
+    fail('The certificate could not be saved. Nothing was recorded — please try again.', error.message)
+    alertBox.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    submitButton.disabled = false
+    submitButton.textContent = 'Issue certificate'
+  }
+}
+
+  return {
+    init,
+  }
+})
+
+  // ---- Router -------------------------------------------------------------
+  //
+  // The three pages become three hash routes. Each view's markup is already in
+  // the document; the router shows one and calls that view's init().
+
+  var views = {
+    register: { el: document.getElementById('view-register'), mod: 'register.js' },
+    'new': { el: document.getElementById('view-new'), mod: 'form.js' },
+    check: { el: document.getElementById('view-check'), mod: 'detail.js' },
+  };
+
+  function currentView() {
+    var path = (window.location.hash || '').replace(/^#\/?/, '').split('?')[0];
+    var section = path.split('/')[0];
+    if (section === 'new') return 'new';
+    if (section === 'check') return 'check';
+    return 'register';
+  }
+
+  var showing = null;
+
+  var TITLES = {
+    register: 'Safety check register — Electrical Safety Check',
+    'new': 'New safety check — Electrical Safety Check',
+    check: 'Certificate — Electrical Safety Check',
+  };
+
+  function route() {
+    var name = currentView();
+
+    Object.keys(views).forEach(function (key) {
+      views[key].el.hidden = key !== name;
+    });
+
+    // Reset before init, because the certificate view replaces this with the
+    // record's own reference and would otherwise leave it behind on the way out.
+    document.title = TITLES[name];
+
+    // Re-entering the register with a different search, or a different
+    // certificate, has to re-run init even though the view has not changed.
+    __req(views[name].mod).init();
+
+    if (showing !== name) {
+      showing = name;
+      window.scrollTo(0, 0);
+    }
+  }
+
+  window.addEventListener('hashchange', route);
+  route();
+})();
+
+</script>
+
+</body>
+</html>

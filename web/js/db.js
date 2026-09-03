@@ -40,3 +40,9 @@ export function getSafetyCheck(id) {
 
 /** Only present on the local backend; the register uses it to offer a sample. */
 export const exportAll = local.exportAll
+
+/**
+ * Live view of whether the local store had to fall back to memory. Meaningless
+ * for the Supabase backend, where it stays inactive.
+ */
+export const storageFallback = local.fallback

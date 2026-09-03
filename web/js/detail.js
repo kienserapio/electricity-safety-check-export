@@ -5,36 +5,51 @@
 import { CHECKLIST, ITEM_STATE_LABELS, TEST_RESULT_LABELS } from './catalog.js'
 import { ORGANISATION_NAME } from './config.js'
 import { formatDisplayDate } from './dates.js'
-import { getSafetyCheck, isConfigured, isDurable } from './db.js'
-import { el, errorPanel, notice, param, qs, render, storageBanner } from './dom.js'
+import { getSafetyCheck, isConfigured, isDurable, storageFallback } from './db.js'
+import { el, errorPanel, ensureStorageBanner, notice, pageHref, param, qs, render } from './dom.js'
 import { downloadCertificate } from './pdf.js'
 import { certificateReference } from './reference.js'
 
-const root = qs('#certificate')
-qs('[data-organisation]').textContent = ORGANISATION_NAME
+let root = null
+let id = null
+let banner = null
 
-const id = param('id')
+export function init() {
+  root = qs('#certificate')
+  id = param('id')
 
-if (!isDurable) {
-  qs('main').prepend(storageBanner())
-}
+  qs('[data-organisation]').textContent = ORGANISATION_NAME
 
-if (!isConfigured()) {
-  render(root, errorPanel('Open js/config.js and fill in your Supabase project URL and anon key.'))
-} else if (!id) {
-  render(root, notice('No certificate was requested.',
-    el('a', { class: 'btn', href: 'index.html', style: 'margin-top:1rem' }, 'Back to register')))
-} else {
+  if (!isDurable) {
+    banner = ensureStorageBanner()
+  }
+
+  if (!isConfigured()) {
+    render(root, errorPanel('Open js/config.js and fill in your Supabase project URL and anon key.'))
+    return
+  }
+
+  if (!id) {
+    render(root, notice('No certificate was requested.', backLink()))
+    return
+  }
+
   load()
 }
 
+function backLink() {
+  return el('a', { class: 'btn', href: pageHref('register'), style: 'margin-top:1rem' },
+    'Back to register')
+}
+
 async function load() {
+  render(root, el('p', { class: 'muted' }, 'Loading the certificate…'))
   try {
     const record = await getSafetyCheck(id)
+    if (storageFallback.active && banner) banner.noteFallback(storageFallback.reason, storageFallback.persists)
     if (!record) {
       document.title = 'Certificate not found'
-      render(root, notice('That certificate could not be found.',
-        el('a', { class: 'btn', href: 'index.html', style: 'margin-top:1rem' }, 'Back to register')))
+      render(root, notice('That certificate could not be found.', backLink()))
       return
     }
     renderCertificate(record)
@@ -64,7 +79,8 @@ function renderCertificate(record) {
 function header(record, reference) {
   return el('div', { class: 'toolbar no-print' }, [
     el('div', {}, [
-      el('a', { href: 'index.html', class: 'muted', style: 'font-size:.75rem' }, '← Back to register'),
+      el('a', { href: pageHref('register'), class: 'muted', style: 'font-size:.75rem' },
+        '← Back to register'),
       el('h1', { class: 'page-title', style: 'margin-top:.25rem' }, reference),
       el('p', { class: 'muted' }, record.address),
     ]),

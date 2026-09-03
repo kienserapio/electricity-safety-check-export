@@ -25,7 +25,7 @@
       <h1 class="page-title">Safety check register</h1>
       <p class="muted">Every certificate issued, newest inspection first.</p>
     </div>
-    <form class="no-print" method="get" action="index.html">
+    <form class="no-print" id="register-search" method="get" action="index.html">
       <input type="text" name="q" aria-label="Search the register"
              placeholder="Search address, electrician or licence">
       <button class="btn" type="submit">Search</button>
@@ -38,7 +38,10 @@
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-<script type="module" src="js/register.js"></script>
+<script type="module">
+  import { init } from './js/register.js'
+  init()
+</script>
 
 </body>
 </html>
