@@ -1,0 +1,39 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-ink: #1c2430;
+  --color-muted: #5b6675;
+  --color-line: #d5dbe3;
+  --color-accent: #365f91;
+  --color-accent-soft: #eef2f8;
+  --color-pass: #1a7f4b;
+  --color-fail: #b3261e;
+}
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  background: #f2f4f7;
+  color: var(--color-ink);
+}
+
+/* The register and detail pages are routinely printed. Strip the chrome and
+   let the certificate body run edge to edge when they are. */
+@media print {
+  body {
+    background: #fff;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-plain {
+    box-shadow: none !important;
+    border: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}

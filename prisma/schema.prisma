@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// One completed Electrical Safety Check report.
+///
+/// `serial` backs the human-readable certificate reference (ESC-<year>-<serial>);
+/// `id` is what appears in URLs so the register is not enumerable.
+model SafetyCheck {
+  id     String @id @default(cuid(2))
+  serial Int    @unique @default(autoincrement())
+
+  // A. Installation address
+  address           String
+  previousCheckDate DateTime? @db.Date
+
+  // B, C and D checklists
+  checklist ChecklistEntry[]
+
+  // D. RCD testing — one row per circuit, no fixed limit
+  rcdTests RcdTest[]
+
+  // E. Smoke alarms
+  smokeAlarmsCompliant Boolean
+  smokeAlarmDueDate    DateTime @db.Date
+
+  // F. Observations and recommendations
+  observations String @default("")
+
+  // G. Certification
+  electricianName   String
+  licenceNumber     String
+  inspectionDate    DateTime @db.Date
+  nextInspectionDue DateTime @db.Date
+  signatureImage    String
+  signedDate        DateTime @db.Date
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([address])
+  @@index([inspectionDate])
+  @@index([nextInspectionDue])
+}
+
+/// A single checklist line item and the state the electrician recorded for it.
+///
+/// The statutory form asks for three distinct outcomes per item — included in
+/// the check, not applicable to this installation, or not inspected. Storing
+/// the state (rather than only the ticked items) keeps that distinction.
+model ChecklistEntry {
+  id            String      @id @default(cuid(2))
+  safetyCheckId String
+  safetyCheck   SafetyCheck @relation(fields: [safetyCheckId], references: [id], onDelete: Cascade)
+
+  section ChecklistSection
+  itemKey String
+  state   ItemState
+
+  @@unique([safetyCheckId, section, itemKey])
+  @@index([safetyCheckId])
+}
+
+/// One row of the RCD (safety switch) test table.
+model RcdTest {
+  id            String      @id @default(cuid(2))
+  safetyCheckId String
+  safetyCheck   SafetyCheck @relation(fields: [safetyCheckId], references: [id], onDelete: Cascade)
+
+  position       Int
+  circuit        String
+  pushButtonTest TestResult
+  timeTest       TestResult
+
+  @@unique([safetyCheckId, position])
+  @@index([safetyCheckId])
+}
+
+enum ChecklistSection {
+  EXTENT
+  VISUAL_INSPECTION
+  POLARITY
+  EARTH_CONTINUITY
+}
+
+enum ItemState {
+  INCLUDED
+  NOT_APPLICABLE
+  NOT_INCLUDED
+}
+
+enum TestResult {
+  PASS
+  FAIL
+  NA
+}
